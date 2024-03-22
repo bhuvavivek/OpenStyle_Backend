@@ -1,18 +1,19 @@
+require("dotenv").config();
+
 const express = require("express");
 const { connectMongoDb } = require("./db/connection");
 const userRoute = require("./modules/user/routes/userRoute");
 const otpRoute = require("./modules/shared/routes/otpRoute");
 const vendorRoute = require("./modules/vendor/routes/vendorRoutes");
 const errorhandlingmiddleware = require("./modules/shared/middleware/errorhandlingmiddleware");
-
 const app = express();
 
-const PORT = 5000;
+const PORT = process.env.PORT || 3000;
 
 // middleware
 
 // connect mongodb
-connectMongoDb("mongodb://127.0.0.1:27017/OpenStyle")
+connectMongoDb(process.env.DB_URL)
   .then(() => console.log("mongodb connected"))
   .catch((err) => console.log(err));
 

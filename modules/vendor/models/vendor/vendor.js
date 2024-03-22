@@ -38,6 +38,9 @@ const vendorSchema = new Schema(
       type: String,
       required: true,
     },
+    images: {
+      type: [String],
+    },
   },
   { timestamps: true }
 );

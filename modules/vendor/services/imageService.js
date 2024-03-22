@@ -4,7 +4,7 @@ class imageService {
   async uploadShopImage(vendorId, imageUrl) {
     try {
       if (!vendorId || !imageUrl) {
-        const erorr = new Error("Invalid input");
+        const error = new Error("Invalid input");
         error.statusCode = 400;
         throw error;
       }
