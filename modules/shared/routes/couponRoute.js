@@ -3,7 +3,7 @@ const CouponController = require("../controllers/couponControllers/couponControl
 const {
   couponValidate,
   couponValidationRule,
-} = require("../middleware/validator/couponvalidation");
+} = require("../middleware/validator/couponValidation");
 
 const router = Router();
 
