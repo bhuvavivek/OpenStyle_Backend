@@ -32,10 +32,9 @@ const handleSignin = async (req, res) => {
 
     res.status(200).json({ message: "Signin in SucessFully", token });
   } catch (error) {
-    if (
-      error.message === "Vendor not found" ||
-      error.message === "Incorrect Password"
-    ) {
+    if (error.message === "Please sign up before accessing your account") {
+      return res.status(401).json({ message: "" });
+    } else if (error.message === "Incorrect Password") {
       return res.status(401).json({ message: error.message });
     }
     return res
