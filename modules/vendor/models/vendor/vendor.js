@@ -49,6 +49,10 @@ const vendorSchema = new Schema(
       type: String,
       required: true,
     },
+    walletBalance: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
