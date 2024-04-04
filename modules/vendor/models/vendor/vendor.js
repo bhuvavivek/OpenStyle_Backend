@@ -53,6 +53,18 @@ const vendorSchema = new Schema(
       type: Number,
       default: 0,
     },
+    upcommingAppointment: {
+      type: Number,
+      default: 0,
+    },
+    todayAppointmentCount: {
+      type: Number,
+      default: 0,
+    },
+    totalCompletedAppointmentCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
