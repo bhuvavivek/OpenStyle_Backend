@@ -53,7 +53,7 @@ const vendorSchema = new Schema(
       type: Number,
       default: 0,
     },
-    upcommingAppointment: {
+    upcomingAppointment: {
       type: Number,
       default: 0,
     },
