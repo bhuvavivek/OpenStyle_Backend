@@ -65,6 +65,10 @@ const vendorSchema = new Schema(
       type: Number,
       default: 0,
     },
+    vendorProfileImage: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );
