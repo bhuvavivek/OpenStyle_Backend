@@ -41,6 +41,14 @@ const vendorSchema = new Schema(
     images: {
       type: [String],
     },
+    lattitude: {
+      type: String,
+      required: true,
+    },
+    longitude: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

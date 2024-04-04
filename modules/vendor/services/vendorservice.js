@@ -27,6 +27,8 @@ class vendorService {
         totalSeats,
         shopType,
         shopAddress,
+        lattitude,
+        longitude,
       } = vendorData;
 
       const existingVendor = await Vendor.findOne({
@@ -47,6 +49,8 @@ class vendorService {
         totalSeats,
         shopType,
         shopAddress,
+        lattitude,
+        longitude,
       });
 
       const token = generateToken(vendor, "VENDOR");

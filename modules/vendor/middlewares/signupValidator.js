@@ -71,6 +71,18 @@ const signupValidationRules = () => {
       .withMessage("userType cannot be empty ")
       .isIn(["User", "Vendor"])
       .withMessage("userType mus be one of ['User','Vendor']"),
+
+    body("lattitude")
+      .exists()
+      .withMessage("lattitude is required")
+      .notEmpty()
+      .withMessage("lattitude cannot be empty "),
+
+    body("longitude")
+      .exists()
+      .withMessage("longitude is required")
+      .notEmpty()
+      .withMessage("longitude cannot be empty "),
   ];
 };
 
