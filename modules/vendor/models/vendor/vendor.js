@@ -77,7 +77,7 @@ vendorSchema.static(
     if (hashedPassword !== userProvidedHash)
       throw new Error("Incorrect Password");
 
-    const token = generateToken(vendor);
+    const token = generateToken(vendor, "VENDOR");
 
     return token;
   }

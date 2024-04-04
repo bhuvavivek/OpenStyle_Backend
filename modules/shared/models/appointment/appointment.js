@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const moment = require("moment");
 
 const appointmentSchema = new Schema({
   vendorId: {
@@ -21,14 +22,23 @@ const appointmentSchema = new Schema({
   },
   appointmentDate: {
     type: Date,
-    default: Date.now(),
+    validate: {
+      validator: function (value) {
+        return moment(value, "YYYY-MM-DD").isValid();
+      },
+      message: (props) =>
+        `${props.value} is not a valid date. Format must be in YYYY-MM-DD`,
+    },
   },
   fromtime: {
     type: String,
     required: { value: true, message: "fromtime is required" },
-    match: {
-      value: /^([0-1][0-9]|2[0-3]:[0-5][0-9])$/,
-      message: "from time must be in HH:MM format",
+    validate: {
+      validator: function (v) {
+        return moment(v, "HH:mm").isValid();
+      },
+      message: (props) =>
+        `${props.value} is not a valid time Format must be in HH:mm`,
     },
   },
   totime: {
@@ -53,8 +63,8 @@ const appointmentSchema = new Schema({
   },
   appointmentStatus: {
     type: String,
-    enum: ["pending", "completed", "confirmed", "cancelled"],
-    default: "pending",
+    enum: ["InPrograss", "Completed", "Confirmed", "Cancelled"],
+    default: "Confirmed",
     required: true,
   },
   cancelReason: {

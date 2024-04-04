@@ -8,6 +8,7 @@ class ShopTimeService {
         error.statusCode = 400;
         throw error;
       }
+
       if (Object.keys(shopTimeData).length === 0) {
         const error = new Error("At least one field is required");
         error.statusCode = 400;

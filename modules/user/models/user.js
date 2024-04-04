@@ -32,6 +32,10 @@ const userSchema = new Schema(
       default: "Other",
       required: true,
     },
+    wallet: {
+      type: Number,
+      default: 0.0,
+    },
   },
   { timestamps: true }
 );
@@ -68,11 +72,11 @@ userSchema.static(
       throw new Error("Incorrect Password");
 
     // for plan jsobject we can use both user._doc or user.toObject() but batter to use toObject() method becuase _docs is internal property of mongoose documents and it may change in future versions
-    const token = generateToken(user);
+    const token = generateToken(user, "USER");
     return token;
   }
 );
 
-User = model("User", userSchema);
+const User = model("User", userSchema);
 
 module.exports = User;

@@ -29,7 +29,7 @@ const handlecreateUser = async (req, res) => {
     // the first one is : user.password = undefined;
     //   the second one is : userResponse = user.toObject(); than in next line delete userResponse.password; than pass  userResponse to the response
 
-    const token = generateToken(user);
+    const token = generateToken(user, "USER");
 
     let userResponse = user.toObject();
     delete userResponse.password;

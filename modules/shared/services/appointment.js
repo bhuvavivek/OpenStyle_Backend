@@ -1,30 +1,77 @@
+const moment = require("moment");
+const User = require("../../user/models/user");
 const Service = require("../../vendor/models/service/service");
+
 const Vendor = require("../../vendor/models/vendor/vendor");
-const service = require("../../vendor/services/service");
 const Appointment = require("../models/appointment/appointment");
 const Coupon = require("../models/coupon/coupon");
+const shopTimeService = require("../../vendor/services/shoptimeService");
+const SlotsAvaibility = require("../models/slotsAvaibility");
 
 class AppointmentService {
-  async setSummerySession(session, data) {
+  async setSummerySession(session, data, userId, walletAmount) {
     try {
-      const { vendorId, serviceId, coupenId, appointmentDate } = data;
+      const { vendorId, serviceId, coupenId, appointmentDate, isWallet } = data;
 
+      // check for user before process
+
+      const user = await User.findById(userId);
+
+      if (!user) {
+        const error = new Error("User not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      // check for vendor Before process
+
+      const vendorDetails = await Vendor.findById(vendorId);
+
+      if (!vendorDetails) {
+        const error = new Error("Vendor not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      // write a code for session
       if (session && data) {
         // If session.summery doesn't exist, initialize it with an empty object
         if (!session.summery) {
           session.summery = {
+            userId: null,
             vendorId: null,
             serviceId: [],
             coupenId: null,
+            shopName: null,
+            shopAddress: null,
+            serviceAmounts: 0,
+            coupenAmount: 0,
+            subTotal: 0,
           };
         }
 
+        // set userId
+        session.summery.userId = userId;
+
+        // set subtotal && plateform fee
+        session.summery.subTotal = 0.0;
+        session.summery.grandTotal = session.summery.subTotal;
+
+        // for the wallet & Appointmentdate
+        session.summery.appointmentDate = appointmentDate;
+        session.summery.isWallet = isWallet ? isWallet : false;
+        session.summery.usedWalletAmount = 0.0;
+
         // Merge the new data with the existing session.summery data
-        if (vendorId) {
+        if (vendorDetails) {
           session.summery.vendorId = vendorId;
+          session.summery.shopName = vendorDetails.shopName;
+          session.summery.shopAddress = vendorDetails.shopAddress;
         }
 
+        // code for services and price calculations of service
         if (serviceId && serviceId.length > 0) {
+          var serviceAmounts = 0.0;
           session.summery.serviceId = serviceId;
           const serviceDetails = await Promise.all(
             serviceId.map(async (serviceId) => {
@@ -36,26 +83,87 @@ class AppointmentService {
               };
             })
           );
-
+          // set the services details
           session.summery.serviceDetails = serviceDetails;
 
-          const serviceAmounts = serviceDetails.reduce(
+          serviceAmounts = serviceDetails.reduce(
             (acc, service) => acc + service.servicePrice,
             0
           );
 
           session.summery.serviceAmounts = serviceAmounts;
+          // update subTotal
+          session.summery.subTotal += serviceAmounts;
+          // update grandTotal
+          session.summery.grandTotal += session.summery.subTotal;
+        } else {
+          session.summery.serviceId = [];
+          session.summery.serviceDetails = [];
+          session.summery.serviceAmounts = 0.0;
         }
 
-        if (coupenId) {
+        // code for coupen and discount
+        if (coupenId && serviceAmounts) {
+          var coupenAmount = 0.0;
           session.summery.coupenId = coupenId;
+          const coupen = await Coupon.findById(coupenId);
+          // check the coupen has data or not
+          if (coupen && !coupen.isExpired) {
+            if (coupen.minApplciableOrderPrice <= serviceAmounts) {
+              // If the coupon is applicable calculate the discountPrice
+              const discountedPrice = Math.round(
+                (serviceAmounts * coupen.discountPercentage) / 100.0
+              );
+
+              // check the discount price greater than maxdiscountPrice
+              if (discountedPrice > coupen.maxDiscountPrice) {
+                coupenAmount = coupen.maxDiscountPrice; //make coupenAmount to MaxDiscountprice
+              } else {
+                coupenAmount = discountedPrice; //make coupenAmount to discountedPrice
+              }
+
+              session.summery.coupenAmount = coupenAmount;
+            } else {
+              session.summery.coupenAmount = coupenAmount;
+              return {
+                success: false,
+                message: "Coupon is not applicable for this order",
+              };
+            }
+          } else {
+            session.summery.coupenAmount = coupenAmount;
+            return {
+              success: false,
+              message: "Coupon is expired",
+            };
+          }
+          // update SubTotal
+          session.summery.subTotal -= coupenAmount;
+          // update grandTotal
+          session.summery.grandTotal -= coupenAmount;
+        } else {
+          session.summery.coupenAmount = 0.0;
+          session.summery.coupenId = null;
         }
 
         if (appointmentDate) {
           session.summery.appointmentDate = appointmentDate;
         }
+
+        // for the wallet
+        if (isWallet && walletAmount > 0) {
+          if (walletAmount >= session.summery.subTotal) {
+            session.summery.usedWalletAmount = session.summery.subTotal;
+            session.summery.grandTotal -= session.summery.usedWalletAmount;
+          } else {
+            session.summery.usedWalletAmount = walletAmount;
+            session.summery.grandTotal -= walletAmount;
+          }
+        }
+
         return session.summery;
       }
+
       return null;
     } catch (error) {
       throw error;
@@ -89,7 +197,82 @@ class AppointmentService {
     }
   }
 
-  async createAppointment(appointmentData) {
+  async getShopSlotTime(shopId, slotDate) {
+    try {
+      const vendor = await Vendor.findById(shopId);
+      if (!vendor) {
+        const error = new Error("Vendor not found");
+        error.statusCode = 404;
+        throw error;
+      }
+      const shopTime = await shopTimeService.getShopTime(shopId);
+
+      const dayOfWeek = moment(slotDate).format("dddd").toLowerCase();
+      const openTime = moment(shopTime?.[dayOfWeek]?.opentime, "HH:mm");
+      const closeTime = moment(shopTime?.[dayOfWeek]?.closetime, "HH:mm");
+      const isshopOpen = shopTime?.[dayOfWeek]?.shopisOpen;
+
+      if (!isshopOpen) {
+        const error = new Error("Shop is closed");
+        error.statusCode = 400;
+        throw error;
+      }
+
+      let timeSlots = [];
+
+      for (
+        let time = openTime;
+        time.isBefore(closeTime);
+        time.add(30, "minutes")
+      ) {
+        if (time.isBefore(openTime) || time.isAfter(closeTime)) {
+          continue;
+        }
+        timeSlots.push({ time: time.format("HH:mm"), isblocked: false });
+      }
+
+      if (
+        moment(slotDate).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")
+      ) {
+        const currentTimePlusOneHour = moment().add(1, "hours");
+        timeSlots = timeSlots.filter((time) => ({
+          time: moment(time, "HH:mm").isSameOrAfter(currentTimePlusOneHour),
+          isblocked: false,
+        }));
+      }
+
+      // Refactor timeslots based on blocked status
+      const filteredtimeSlots = await Promise.all(
+        timeSlots.map(async (time) => {
+          const blockslot = await SlotsAvaibility.findOne({
+            $and: [
+              { slotstartTime: time.time },
+              { slotdate: moment(slotDate).format("YYYY-MM-DD") },
+              { isBlocked: true },
+              { vendorId: shopId },
+            ],
+          });
+
+          if (
+            blockslot &&
+            blockslot.isBlocked &&
+            blockslot.slotstartTime === time.time
+          ) {
+            // Update isblocked status
+            time.isblocked = true;
+          }
+
+          return time;
+        })
+      );
+
+      return filteredtimeSlots;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createAppointment() {
     try {
       const { vendorId, userId, serviceId, coupenId, ...otherData } =
         appointmentData;
@@ -130,6 +313,51 @@ class AppointmentService {
 
   async rescheduleAppointment(appointmentId, rescheduleDate) {
     try {
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async blockshopSlot(shopId, slotDate, slotTime, userId) {
+    try {
+      // here we have to check for vendor service and user service get functions
+
+      const user = await User.findById(userId);
+      if (!user) {
+        const error = new Error("User not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      const vendor = await Vendor.findById(shopId);
+      if (!vendor) {
+        const error = new Error("Vendor not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      const existingSlot = await SlotsAvaibility.findOne({
+        vendorId: shopId,
+        slotdate: moment(slotDate).format("YYYY-MM-DD"),
+        slotstartTime: moment(slotTime, "HH:mm").format("HH:mm"),
+        isBlocked: true,
+      });
+
+      if (existingSlot) {
+        const error = new Error("Slot is already blocked");
+        error.statusCode = 400;
+        throw error;
+      }
+
+      const response = await SlotsAvaibility.create({
+        vendorId: shopId,
+        slotdate: moment(slotDate).format("YYYY-MM-DD"),
+        slotstartTime: moment(slotTime, "HH:mm").format("HH:mm"),
+        userId: userId,
+        isBlocked: true,
+      });
+
+      return response;
     } catch (error) {
       throw error;
     }

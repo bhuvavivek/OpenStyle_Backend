@@ -49,7 +49,7 @@ class vendorService {
         shopAddress,
       });
 
-      const token = generateToken(vendor);
+      const token = generateToken(vendor, "VENDOR");
 
       return {
         message: "Vendor created successfully",

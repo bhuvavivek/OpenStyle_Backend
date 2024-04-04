@@ -1,10 +1,21 @@
 const { Router } = require("express");
-const AppointmentController = require("../controllers/appointControllers/appointmentController");
-
+const {
+  setSummery,
+  getSummery,
+  destroySummery,
+  getShopSlotTime,
+  blockShopSlot,
+  getblockShopSlpt,
+} = require("../controllers/appointControllers/appointmentController");
+const { authenticate } = require("../middleware/authenticate");
 const router = Router();
 
-router.post("/setSummery", AppointmentController.setSummery);
-router.get("/getSummery", AppointmentController.getSummery);
-router.delete("/deleteSummery", AppointmentController.destroySummery);
+router.use(authenticate);
 
+router.post("/setSummery", setSummery);
+router.get("/getSummery", getSummery);
+router.delete("/deleteSummery", destroySummery);
+router.get("/getShopSlotTime/:id", getShopSlotTime);
+router.post("/blockSlot", blockShopSlot);
+router.get("/getShopSlotTime", getblockShopSlpt);
 module.exports = router;

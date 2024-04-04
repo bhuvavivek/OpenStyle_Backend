@@ -1,21 +1,36 @@
 const { Schema, model } = require("mongoose");
+const moment = require("moment");
 
 const daySchema = new Schema(
   {
     opentime: {
       type: String,
       default: "00:00",
-      match: {
-        value: /^([]:)$/,
+      required: { value: true, message: "opentime is required" },
+      validate: {
+        validator: function (v) {
+          return moment(v, "HH:mm").isValid();
+        },
+        message: (props) =>
+          `${props.value} is not a valid time Format must be in HH:mm`,
       },
     },
     closetime: {
       type: String,
       default: "00:00",
+      required: { value: true, message: "closetime is required" },
+      validate: {
+        validator: function (v) {
+          return moment(v, "HH:mm").isValid();
+        },
+        message: (props) =>
+          `${props.value} is not a valid time Format must be in HH:mm`,
+      },
     },
     shopisOpen: {
       type: Boolean,
       default: false,
+      required: { value: true, message: "shopisOpen is required" },
     },
   },
   { _id: false }
@@ -34,7 +49,6 @@ const shoptimingSchema = new Schema({
   thursday: daySchema,
   friday: daySchema,
   saturday: daySchema,
-  sunday: daySchema,
 });
 
 const Shoptiming = model("Shoptiming", shoptimingSchema);

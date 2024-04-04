@@ -1,12 +1,13 @@
 {
-  "name": "apna-ziavii-backend",
+  "name": "open-style-backend",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "build": "babel . -d dist"
   },
   "author": "vivek bhuva",
   "license": "ISC",
@@ -17,7 +18,13 @@
     "express-session": "^1.18.0",
     "express-validator": "^7.0.1",
     "jsonwebtoken": "~9.0.2",
+    "moment": "^2.30.1",
     "mongoose": "~8.1.2",
     "url": "~0.11.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.1",
+    "@babel/core": "^7.24.3",
+    "@babel/preset-env": "^7.24.3"
   }
 }
