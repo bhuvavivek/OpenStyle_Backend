@@ -58,7 +58,6 @@ class vendorService {
       return {
         message: "Vendor created successfully",
         token,
-        data: { ...vendor.toObject(), password: undefined, salt: undefined },
       };
     } catch (error) {
       throw error;
