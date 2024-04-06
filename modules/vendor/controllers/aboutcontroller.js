@@ -1,13 +1,18 @@
 const AboutService = require("../services/aboutService");
 
 class AboutController {
-  async createAndupdateAbout(req, res, next) {
+  async UpdateAbout(req, res, next) {
     try {
       const vendorId = req.user.id;
-      const result = await AboutService.createAndUpdateAbout(
-        vendorId,
-        req.body
-      );
+      const authType = req.type;
+
+      if (authType !== "VENDOR") {
+        return res.status(401).json({
+          message: "You are not authorized to Update About Details",
+          success: false,
+        });
+      }
+      const result = await AboutService.UpdateAbout(vendorId, req.body);
 
       return res
         .status(200)
@@ -16,9 +21,19 @@ class AboutController {
       next(error);
     }
   }
+
   async getAbout(req, res, next) {
     try {
       const vendorId = req.user.id;
+
+      const authType = req.type;
+      if (authType !== "VENDOR") {
+        return res.status(401).json({
+          message: "You are not authorized to get About Details",
+          success: false,
+        });
+      }
+
       const result = await AboutService.getAbout(vendorId);
 
       return res

@@ -4,7 +4,7 @@ const ShopTimeController = require("../../controllers/shopTimeController/shopTim
 const router = Router();
 
 router
-  .route("/:id")
+  .route("/")
   .get(ShopTimeController.getShopTiming)
   .put(ShopTimeController.updateShopTiming);
 

@@ -9,6 +9,6 @@ router.use(authenticate);
 router
   .route("/")
   .get(AboutController.getAbout)
-  .patch(AboutController.createAndupdateAbout);
+  .patch(AboutController.UpdateAbout);
 
 module.exports = router;
