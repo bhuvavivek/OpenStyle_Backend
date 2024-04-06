@@ -5,6 +5,7 @@ const subCategoryRoute = require("./subCategoryRoute/subCategoryRoute");
 const serviceRoute = require("./serviceRoute/serviceRoute");
 const shopTimingRoute = require("./shoptimeRoute/shoptimeRoute");
 const vendorProfile = require("./profileRoute/profileRoute");
+const aboutRoute = require("./aboutRoutes");
 
 const router = Router();
 
@@ -14,4 +15,5 @@ router.use("/subcategory", subCategoryRoute);
 router.use("/service", serviceRoute);
 router.use("/shoptime", shopTimingRoute);
 router.use("/profile", vendorProfile);
+router.use("/about", aboutRoute);
 module.exports = router;

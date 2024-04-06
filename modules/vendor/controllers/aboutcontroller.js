@@ -3,8 +3,9 @@ const AboutService = require("../services/aboutService");
 class AboutController {
   async createAndupdateAbout(req, res, next) {
     try {
+      const vendorId = req.user.id;
       const result = await AboutService.createAndUpdateAbout(
-        req.params.id,
+        vendorId,
         req.body
       );
 
@@ -17,7 +18,8 @@ class AboutController {
   }
   async getAbout(req, res, next) {
     try {
-      const result = await AboutService.getAbout(req.params.id);
+      const vendorId = req.user.id;
+      const result = await AboutService.getAbout(vendorId);
 
       return res
         .status(200)
