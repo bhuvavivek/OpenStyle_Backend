@@ -4,8 +4,11 @@ const {
   couponValidate,
   couponValidationRule,
 } = require("../middleware/validator/couponValidation");
+const { authenticate } = require("../middleware/authenticate");
 
 const router = Router();
+
+router.use(authenticate);
 
 router.post(
   "/",
@@ -14,7 +17,7 @@ router.post(
   CouponController.createCoupon
 );
 
-router.get("/vendor/:id", CouponController.getCoupon);
+router.get("/", CouponController.getCoupon);
 
 router
   .route("/:id")

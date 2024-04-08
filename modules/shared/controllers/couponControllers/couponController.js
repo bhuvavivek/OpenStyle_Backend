@@ -5,7 +5,14 @@ class CouponController {
     try {
       const couponData = req.body;
 
-      const result = await couponService.createCoupon(couponData);
+      if (req.type !== "VENDOR") {
+        const error = new Error(
+          "You are not authorized to perform this action"
+        );
+        error.statusCode = 403;
+        throw error;
+      }
+      const result = await couponService.createCoupon(couponData, req.user.id);
       if (!result) {
         const error = new Error("Coupon not created");
         error.statusCode = 400;
@@ -25,7 +32,7 @@ class CouponController {
 
   getCoupon = async (req, res, next) => {
     try {
-      const vendorId = req.params.id;
+      const vendorId = req.user.id;
 
       const result = await couponService.getCoupon(vendorId);
       return res.status(200).json(result);
@@ -46,6 +53,13 @@ class CouponController {
 
   deleteCoupon = async (req, res, next) => {
     try {
+      if (req.type !== "VENDOR") {
+        const error = new Error(
+          "You are not authorized to perform this action"
+        );
+        error.statusCode = 403;
+        throw error;
+      }
       const couponId = req.params.id;
       const result = await couponService.deleteCoupon(couponId);
       return res.status(400).json(result);

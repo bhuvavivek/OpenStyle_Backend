@@ -62,12 +62,6 @@ const couponValidationRule = () => {
       .withMessage("Expire date cannot be empty")
       .isISO8601()
       .withMessage("Expire date must be a valid date in the format YYYY-MM-DD"),
-
-    body("vendorId")
-      .exists()
-      .withMessage("vendorId is required")
-      .notEmpty()
-      .withMessage("vendorId cannot be empty"),
   ];
 };
 

@@ -2,7 +2,7 @@ const vendorservice = require("../../vendor/services/vendorservice");
 const Coupon = require("../models/coupon/coupon");
 
 class CouponService {
-  async createCoupon(couponData) {
+  async createCoupon(couponData, vendorId) {
     try {
       const {
         coupenName,
@@ -12,7 +12,6 @@ class CouponService {
         maxDiscountPrice,
         discountPercentage,
         expireDate,
-        vendorId,
       } = couponData;
 
       await vendorservice.getVendorById(vendorId);
