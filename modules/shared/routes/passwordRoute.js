@@ -4,6 +4,7 @@ const { otpVerification } = require("../middleware/verifyOtp");
 const {
   ForgotPasswordvalidationRules,
   ForgotPasswordvalidate,
+  PassWordvalidationRule,
 } = require("../middleware/forgotpassword");
 const { setFlag } = require("../utils/setflag");
 const {
@@ -32,6 +33,12 @@ router.post(
   generateAndSendOtp
 );
 
-router.patch("/change", authenticate, passwordcontroller.changePassword);
+router.patch(
+  "/change",
+  authenticate,
+  PassWordvalidationRule(),
+  ForgotPasswordvalidate,
+  passwordcontroller.changePassword
+);
 
 module.exports = router;

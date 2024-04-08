@@ -26,14 +26,7 @@ const ForgotPasswordvalidationRules = () => {
       .notEmpty()
       .withMessage("newPassword cannot be empty")
       .isLength({ min: 6 })
-      .withMessage("newPassword must be at least 6 characters")
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/
-      )
-      .withMessage(
-        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-      ),
-
+      .withMessage("newPassword must be at least 6 characters"),
     body("otp")
       .exists()
       .withMessage("otp is required")
@@ -52,7 +45,28 @@ const ForgotPasswordvalidate = (req, res, next) => {
   return res.status(422).json({ message: extractedErrors[0] });
 };
 
+const PassWordvalidationRule = () => {
+  return [
+    body("newPassword")
+      .exists()
+      .withMessage("newPassword is required")
+      .notEmpty()
+      .withMessage("newPassword cannot be empty")
+      .isLength({ min: 6 })
+      .withMessage("newPassword must be at least 6 characters"),
+
+    body("oldPassword")
+      .exists()
+      .withMessage("oldPassword is required")
+      .notEmpty()
+      .withMessage("oldPassword cannot be empty")
+      .isLength({ min: 6 })
+      .withMessage("oldPassword must be at least 6 characters"),
+  ];
+};
+
 module.exports = {
   ForgotPasswordvalidationRules,
+  PassWordvalidationRule,
   ForgotPasswordvalidate,
 };

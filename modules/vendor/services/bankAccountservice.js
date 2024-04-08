@@ -2,7 +2,7 @@ const BankAccount = require("../models/bankAccount/bankAccount");
 const vendorservice = require("./vendorservice");
 
 class BankAccountService {
-  async createBankAccount(bankAccountData) {
+  async createBankAccount(bankAccountData, vendorId) {
     try {
       const {
         accountHolderName,
@@ -10,7 +10,6 @@ class BankAccountService {
         bankName,
         branchName,
         ifscCode,
-        vendorId,
       } = bankAccountData;
 
       //   check for empty fields
@@ -52,14 +51,7 @@ class BankAccountService {
       await vendorservice.getVendorById(vendorId);
 
       //   find the bank details threw the  vendor id
-      const bankAccount = await BankAccount.find({ vendor: vendorId });
-
-      //   if not fopund than throw error
-      if (!bankAccount) {
-        const error = new Error("Bank Account not found");
-        error.statusCode = 404;
-        throw error;
-      }
+      const bankAccount = await BankAccount.findOne({ vendor: vendorId });
 
       return bankAccount;
     } catch (error) {
