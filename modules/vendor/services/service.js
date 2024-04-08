@@ -9,6 +9,17 @@ class Service {
 
       await subcategoryservice.getSubCategoryById(subCategoryId);
 
+      const duplicateServiceName = await ServiceModel.findOne({
+        serviceName,
+        subCategory: subCategoryId,
+      });
+
+      if (duplicateServiceName) {
+        const error = new Error("Service already exists");
+        error.statusCode = 409;
+        throw error;
+      }
+
       const service = new ServiceModel({
         serviceName,
         serviceDuration,
@@ -58,6 +69,23 @@ class Service {
       }
 
       return service;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateServiceById(serviceName, serviceId) {
+    try {
+      const service = await ServiceModel.findById(serviceId);
+      if (!service) {
+        const error = new Error("Invalid ServiceId");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      service.serviceName = serviceName;
+      await service.save();
+      return { message: "Service Updated Successfully", service };
     } catch (error) {
       throw error;
     }

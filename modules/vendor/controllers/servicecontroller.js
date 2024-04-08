@@ -1,0 +1,55 @@
+const Service = require("../services/service");
+
+class ServiceController {
+  createService = async (req, res, next) => {
+    try {
+      const serviceData = req.body;
+
+      const result = await Service.createService(serviceData);
+
+      return res.status(201).json({ result });
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        const errors = error.message.split(",");
+        res.status(400).json({ error: errors[0] });
+      } else {
+        next(error);
+      }
+    }
+  };
+
+  getServices = async (req, res, next) => {
+    try {
+      const subcategoryId = req.params.subcategoryId;
+      const result = await Service.getAllServiceBySubCategoryId(subcategoryId);
+      return res.status(200).json({ result });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getService = async (req, res, next) => {
+    try {
+      const serviceId = req.params.serviceId;
+      const result = await Service.getServiceById(serviceId);
+      return res.status(200).json({ result });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updateService = async (req, res, next) => {
+    try {
+      const { serviceName } = req.body;
+      const serviceId = req.params.serviceId;
+
+      const result = await Service.updateServiceById(serviceName, serviceId);
+
+      return res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+}
+
+module.exports = new ServiceController();
