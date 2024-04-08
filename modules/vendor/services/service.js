@@ -34,12 +34,34 @@ class Service {
     }
   }
 
-  async getAllServiceBySubCategoryId(subcategoryId) {
+  async getAllServiceBySubCategoryId(subcategoryId, dropdown, vendorId) {
     try {
       await subcategoryservice.getSubCategoryById(subcategoryId);
-      const services = await ServiceModel.find({
-        subCategory: subcategoryId,
-      });
+      let services;
+
+      if (dropdown === "true") {
+        services = await ServiceModel.find({
+          subCategory: subcategoryId,
+        });
+      }
+
+      if (!dropdown || dropdown === "false") {
+        services = await VendorServiceModel.find({
+          vendorId: vendorId,
+          subCategoryId: subcategoryId,
+        })
+          .select("-_id -vendorId -categoryId -subCategoryId")
+          .populate({
+            path: "serviceId",
+            select: "_id serviceName ",
+          });
+
+        // reformate the object and store to the services
+        services = services.map((service) => {
+          const { serviceId, ...otherProps } = service.toObject();
+          return { ...serviceId, ...otherProps };
+        });
+      }
 
       if (!services) {
         const error = new Error("No Service Found");
@@ -92,7 +114,11 @@ class Service {
         serviceData;
 
       await vendorservice.getVendorById(vendorId);
-      const service = await this.getServiceById(serviceId);
+
+      const service = await ServiceModel.findById(serviceId).populate({
+        path: "subCategory",
+        populate: { path: "category" },
+      });
 
       if (!service) {
         const error = new Error("Invalid ServiceId");
@@ -100,7 +126,17 @@ class Service {
         throw error;
       }
 
-      const vendorService = new VendorServiceModel({});
+      const vendorService = await VendorServiceModel.create({
+        vendorId,
+        serviceId,
+        serviceDuration,
+        servicePrice,
+        targetGender,
+        categoryId: service.subCategory.category._id,
+        subCategoryId: service.subCategory._id,
+      });
+
+      return vendorService;
     } catch (error) {
       throw error;
     }

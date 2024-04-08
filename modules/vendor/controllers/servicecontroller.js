@@ -21,7 +21,11 @@ class ServiceController {
   getServices = async (req, res, next) => {
     try {
       const subcategoryId = req.params.subcategoryId;
-      const result = await Service.getAllServiceBySubCategoryId(subcategoryId);
+      const result = await Service.getAllServiceBySubCategoryId(
+        subcategoryId,
+        req.query.dropdown,
+        req.user.id
+      );
 
       if (result.length === 0) {
         return res.status(200).json({
@@ -54,6 +58,26 @@ class ServiceController {
       const result = await Service.updateServiceById(serviceName, serviceId);
 
       return res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  createVendorService = async (req, res, next) => {
+    try {
+      const vendorId = req.user.id;
+      const serviceData = req.body;
+
+      if (req.type !== "VENDOR") {
+        const error = new Error("You are not authorized to create service");
+        error.statusCode = 401;
+        throw error;
+      }
+
+      const result = await Service.createVendorService(vendorId, serviceData);
+      return res
+        .status(201)
+        .json({ message: "Service created successfully", result });
     } catch (error) {
       next(error);
     }

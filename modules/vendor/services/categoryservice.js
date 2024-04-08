@@ -1,4 +1,8 @@
+const {
+  vendorServiceValidationRule,
+} = require("../middlewares/valdiators/vendorServicevalidator");
 const Category = require("../models/category");
+const VendorServiceModel = require("../models/vendorService");
 const VendorService = require("./vendorservice");
 
 class CategoryService {
@@ -29,9 +33,25 @@ class CategoryService {
     }
   }
 
-  async getCategories() {
+  async getCategories(dropdown, vendorId) {
     try {
-      const categories = await Category.find({});
+      let categories;
+
+      if (dropdown === "true") {
+        categories = await Category.find({});
+      }
+
+      if (!dropdown || dropdown === "false") {
+        categories = (
+          await VendorServiceModel.find({
+            vendorId: vendorId,
+          })
+            .populate({
+              path: "categoryId",
+            })
+            .select("categoryId -_id")
+        ).map((doc) => doc.categoryId);
+      }
 
       if (!categories) {
         const error = new Error("Category not found ");

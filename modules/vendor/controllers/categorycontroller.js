@@ -21,7 +21,10 @@ class CategoryController {
 
   getCategories = async (req, res, next) => {
     try {
-      const result = await CategoryService.getCategories();
+      const result = await CategoryService.getCategories(
+        req.query.dropdown,
+        req.user.id
+      );
 
       res.status(200).json({ success: true, data: result });
     } catch (error) {
