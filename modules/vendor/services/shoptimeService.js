@@ -1,6 +1,17 @@
 const Shoptiming = require("../models/shoptiming/shoptiming");
+const { TimeFormat } = require("../../../utils");
 
 class ShopTimeService {
+  days = [
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+  ];
+
   async updateShopTime(vendorId, shopTimeData) {
     try {
       if (!vendorId) {
@@ -40,8 +51,8 @@ class ShopTimeService {
 
       if (!shopTime) {
         const defaultDay = {
-          opentime: "00:00",
-          closetime: "00:00",
+          opentime: "12:00 AM",
+          closetime: "12:00 AM",
           shopisOpen: false,
         };
 
@@ -58,6 +69,7 @@ class ShopTimeService {
 
         await shopTime.save();
       }
+
       return shopTime;
     } catch (error) {
       throw error;

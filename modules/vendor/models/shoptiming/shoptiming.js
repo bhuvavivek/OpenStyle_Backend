@@ -5,26 +5,26 @@ const daySchema = new Schema(
   {
     opentime: {
       type: String,
-      default: "00:00",
+      default: "12:00 AM",
       required: { value: true, message: "opentime is required" },
       validate: {
         validator: function (v) {
-          return moment(v, "HH:mm").isValid();
+          return moment(v, "hh:mm:A").isValid();
         },
         message: (props) =>
-          `${props.value} is not a valid time Format must be in HH:mm`,
+          `${props.value} is not a valid time Format must be in hh:mm A`,
       },
     },
     closetime: {
       type: String,
-      default: "00:00",
+      default: "12:00 AM",
       required: { value: true, message: "closetime is required" },
       validate: {
         validator: function (v) {
-          return moment(v, "HH:mm").isValid();
+          return moment(v, "hh:mm A").isValid();
         },
         message: (props) =>
-          `${props.value} is not a valid time Format must be in HH:mm`,
+          `${props.value} is not a valid time Format must be in hh:mm A`,
       },
     },
     shopisOpen: {

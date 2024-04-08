@@ -2,6 +2,7 @@ const User = require("../../../user/models/user");
 const AppointmentService = require("../../services/appointment");
 const moment = require("moment");
 const blockShopSlotModel = require("../../models/slotsAvaibility");
+const { TimeFormat } = require("../../../../utils");
 
 class AppointmentController {
   setSummery = async (req, res, next) => {
@@ -246,7 +247,7 @@ class AppointmentController {
         throw error;
       }
 
-      if (!moment(req.body.slotTime, "HH:mm").isValid()) {
+      if (!TimeFormat.Validate12Hour(req.body.slotTime)) {
         const error = new Error("Invalid slotTime format");
         error.statusCode = 400;
         throw error;

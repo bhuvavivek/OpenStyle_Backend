@@ -7,6 +7,7 @@ const Appointment = require("../models/appointment/appointment");
 const Coupon = require("../models/coupon/coupon");
 const shopTimeService = require("../../vendor/services/shoptimeService");
 const SlotsAvaibility = require("../models/slotsAvaibility");
+const { TimeFormat } = require("../../../utils");
 
 class AppointmentService {
   async setSummerySession(session, data, userId, walletAmount) {
@@ -208,14 +209,18 @@ class AppointmentService {
       const shopTime = await shopTimeService.getShopTime(shopId);
 
       const dayOfWeek = moment(slotDate).format("dddd").toLowerCase();
-      const openTime = moment(shopTime?.[dayOfWeek]?.opentime, "HH:mm");
-      const closeTime = moment(shopTime?.[dayOfWeek]?.closetime, "HH:mm");
+      const openTime = moment(shopTime?.[dayOfWeek]?.opentime, "hh:mm A");
+      const closeTime = moment(shopTime?.[dayOfWeek]?.closetime, "hh:mm A");
       const isshopOpen = shopTime?.[dayOfWeek]?.shopisOpen;
 
       if (!isshopOpen) {
         const error = new Error("Shop is closed");
         error.statusCode = 400;
         throw error;
+      }
+
+      if (shopTime?.[dayOfWeek]?.closetime === "12:00 AM") {
+        closeTime.add(1, "days");
       }
 
       let timeSlots = [];
@@ -228,19 +233,20 @@ class AppointmentService {
         if (time.isBefore(openTime) || time.isAfter(closeTime)) {
           continue;
         }
-        timeSlots.push({ time: time.format("HH:mm"), isblocked: false });
+        timeSlots.push({
+          time: moment(time).format("hh:mm A"),
+          isblocked: false,
+        });
       }
 
       if (
         moment(slotDate).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")
       ) {
         const currentTimePlusOneHour = moment().add(1, "hours");
-        timeSlots = timeSlots.filter((time) => ({
-          time: moment(time, "HH:mm").isSameOrAfter(currentTimePlusOneHour),
-          isblocked: false,
-        }));
+        timeSlots = timeSlots.filter((slot) =>
+          moment(slot.time, "hh:mm A").isSameOrAfter(currentTimePlusOneHour)
+        );
       }
-
       // Refactor timeslots based on blocked status
       const filteredtimeSlots = await Promise.all(
         timeSlots.map(async (time) => {
@@ -339,7 +345,7 @@ class AppointmentService {
       const existingSlot = await SlotsAvaibility.findOne({
         vendorId: shopId,
         slotdate: moment(slotDate).format("YYYY-MM-DD"),
-        slotstartTime: moment(slotTime, "HH:mm").format("HH:mm"),
+        slotstartTime: moment(slotTime, "hh:mm A").format("hh:mm A"),
         isBlocked: true,
       });
 
@@ -352,7 +358,7 @@ class AppointmentService {
       const response = await SlotsAvaibility.create({
         vendorId: shopId,
         slotdate: moment(slotDate).format("YYYY-MM-DD"),
-        slotstartTime: moment(slotTime, "HH:mm").format("HH:mm"),
+        slotstartTime: moment(slotTime, "hh:mm A").format("hh:mm A"),
         userId: userId,
         isBlocked: true,
       });

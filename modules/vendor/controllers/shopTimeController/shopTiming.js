@@ -1,3 +1,4 @@
+const { TimeFormat } = require("../../../../utils");
 const shoptimeService = require("../../services/shoptimeService");
 const moment = require("moment");
 class ShopTimeController {
@@ -46,27 +47,29 @@ class ShopTimeController {
         "saturday",
       ];
 
-      for (let day of days) {
+      // validate the providing time is valid 12 hour format time or not  for each day
+      days.forEach((day) => {
         if (shopTimingData[day]) {
-          if (!moment(shopTimingData[day].opentime, "HH:mm").isValid()) {
+          if (!TimeFormat.Validate12Hour(shopTimingData[day].opentime)) {
             const error = new Error(
-              `Invalid opentime format for ${day} format must be in HH:mm`
+              `Invalid opentime format for ${day} format must be in 12 Hour Format`
             );
             error.statusCode = 400;
             throw error;
           }
 
-          if (!moment(shopTimingData[day].closetime, "HH:mm").isValid()) {
+          if (!TimeFormat.Validate12Hour(shopTimingData[day].closetime)) {
             const error = new Error(
-              `Invalid closetime format for ${day} format must be in HH:mm`
+              `Invalid closetime format for ${day} format must be in 12 Hour Format`
             );
             error.statusCode = 400;
             throw error;
           }
 
           if (
-            moment(shopTimingData[day].opentime, "HH:mm").isAfter(
-              moment(shopTimingData[day].closetime, "HH:mm")
+            shopTimingData[day].closetime !== "12:00 AM" &&
+            moment(shopTimingData[day].opentime, "hh:mm A").isAfter(
+              moment(shopTimingData[day].closetime, "hh:mm A")
             )
           ) {
             const error = new Error(
@@ -76,7 +79,7 @@ class ShopTimeController {
             throw error;
           }
         }
-      }
+      });
 
       const result = await shoptimeService.updateShopTime(
         vendorId,
