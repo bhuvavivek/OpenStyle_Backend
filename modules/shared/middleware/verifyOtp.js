@@ -16,20 +16,28 @@ const otpVerification = async (req, res, next) => {
     } else if (userType === "Vendor") {
       Model = Vendor;
     } else {
-      return res.status(400).json({ message: "invalid userType" });
+      return res.status(400).json({ message: `invalid ${userType}` });
     }
 
     const existingEntity = await Model.findOne({
       $or: [{ emailAddress }, { phoneNumber }],
     });
 
-    if (existingEntity) {
+    if (existingEntity && !req.isforgotpassword) {
       return res.status(400).json({
         message:
           existingEntity.emailAddress === emailAddress
             ? "Email Aready Exist"
             : "PhoneNumber Already Exist",
       });
+    }
+
+    if (req.isforgotpassword) {
+      if (!existingEntity) {
+        return res.status(404).json({
+          message: `${userType} Not Found with the given PhoneNumber`,
+        });
+      }
     }
 
     const otpDoc = await Otp.findOne({ phoneNumber });

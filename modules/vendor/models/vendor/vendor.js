@@ -98,6 +98,8 @@ vendorSchema.static(
     const salt = vendor.salt;
     const hashedPassword = vendor.password;
 
+    console.log("this is while logging", salt);
+
     const userProvidedHash = createHmac("sha256", salt)
       .update(password)
       .digest("hex");

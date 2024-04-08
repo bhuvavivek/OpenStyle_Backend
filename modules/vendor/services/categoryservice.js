@@ -4,15 +4,20 @@ const VendorService = require("./vendorservice");
 class CategoryService {
   async createCategory(categoryData) {
     try {
-      const { categoryName, targetGender, vendorId } = categoryData;
+      const { categoryName } = categoryData;
 
-      // This will throw an error if the vendor is not found
-      await VendorService.getVendorById(vendorId);
+      const duplicateName = await Category.findOne({
+        categoryName: categoryName,
+      });
+
+      if (duplicateName) {
+        const error = new Error("Category already exists");
+        error.statusCode = 409;
+        throw error;
+      }
 
       const category = new Category({
         categoryName,
-        targetGender,
-        vendor: vendorId,
       });
 
       await category.validate();
@@ -24,10 +29,9 @@ class CategoryService {
     }
   }
 
-  async getCategoryByVendoId(vendorId) {
+  async getCategories() {
     try {
-      await VendorService.getVendorById(vendorId);
-      const categories = await Category.find({ vendor: vendorId });
+      const categories = await Category.find({});
 
       if (!categories) {
         const error = new Error("Category not found ");
@@ -36,7 +40,7 @@ class CategoryService {
       }
 
       if (categories.length === 0) {
-        return { message: "No categories found for this vendor" };
+        return { message: "No categories found" };
       }
 
       return categories;

@@ -9,6 +9,17 @@ class SubCategoryService {
 
       await categoryservice.getCategoryById(categoryId);
 
+      const duplicateName = await SubCategory.findOne({
+        category: categoryId,
+        subCategoryName,
+      });
+
+      if (duplicateName) {
+        const error = new Error("SubCategory already exists");
+        error.statusCode = 409;
+        throw error;
+      }
+
       const subCategory = new SubCategory({
         subCategoryName,
         category: categoryId,

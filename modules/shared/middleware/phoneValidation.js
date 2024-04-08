@@ -29,6 +29,27 @@ const phoneValidationRules = () => {
       .withMessage("userType mus be one of ['User','Vendor']"),
   ];
 };
+const phonePasswordValidationRules = () => {
+  return [
+    body("phoneNumber")
+      .exists()
+      .withMessage("phoneNumber is required")
+      .notEmpty()
+      .withMessage("PhoneNumber cannot be empty")
+      .isNumeric()
+      .withMessage("PhoneNumber is not type number ")
+      .isLength({ min: 10, max: 10 })
+      .withMessage("Phonenumber must be 10 digit"),
+
+    body("userType")
+      .exists()
+      .withMessage("userType is required")
+      .notEmpty()
+      .withMessage("userType cannot be empty ")
+      .isIn(["User", "Vendor"])
+      .withMessage("userType mus be one of ['User','Vendor']"),
+  ];
+};
 
 const phoneValidate = (req, res, next) => {
   const errors = validationResult(req);
@@ -41,6 +62,7 @@ const phoneValidate = (req, res, next) => {
 };
 
 module.exports = {
+  phonePasswordValidationRules,
   phoneValidationRules,
   phoneValidate,
 };

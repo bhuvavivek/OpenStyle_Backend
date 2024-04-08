@@ -41,15 +41,6 @@ class VendorController {
       next(error);
     }
   };
-
-  changePassword = async (req, res, next) => {
-    try {
-      const result = await vendorservice.changePassword(req.body);
-      return res.status(200).json(result);
-    } catch (error) {
-      next(error);
-    }
-  };
 }
 
 module.exports = new VendorController();

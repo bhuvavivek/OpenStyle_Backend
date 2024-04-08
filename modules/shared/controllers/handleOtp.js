@@ -21,12 +21,18 @@ const generateAndSendOtp = async (req, res) => {
     $or: [{ emailAddress }, { phoneNumber }],
   });
 
-  if (existingEntity) {
+  if (existingEntity && !req.isforgotpassword) {
     return res.status(400).json({
       message:
         existingEntity.emailAddress === emailAddress
           ? "Email Already Exist"
           : "PhoneNumber Already Exist",
+    });
+  }
+
+  if (req.isforgotpassword && !existingEntity) {
+    return res.status(404).json({
+      message: `${userType} Not Found with the given PhoneNumber`,
     });
   }
 

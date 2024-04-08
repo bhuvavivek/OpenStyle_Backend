@@ -1,23 +1,22 @@
 const { Router } = require("express");
-const createCategory = require("../../controllers/categoryController/createCategory");
+
 const {
   categoryValidationRule,
   categoryValidator,
 } = require("../../middlewares/valdiators/categoryValidator");
-const getAllCategory = require("../../controllers/categoryController/getAllCategory");
-const getSingleCategory = require("../../controllers/categoryController/getSingleCategory");
-
+const CategoryController = require("../../controllers/categorycontroller");
+const { authenticate } = require("../../../shared/middleware/authenticate");
 const router = Router();
 
 router.post(
   "/create",
   categoryValidationRule(),
   categoryValidator,
-  createCategory
+  CategoryController.createCategory
 );
 
-router.get("/:vendorId", getAllCategory);
+router.get("/", authenticate, CategoryController.getCategories);
 
-router.get("/:categoryId", getSingleCategory);
+router.get("/:categoryId", authenticate, CategoryController.getCategory);
 
 module.exports = router;

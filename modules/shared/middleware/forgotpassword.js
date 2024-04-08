@@ -1,6 +1,6 @@
 const { body, validationResult } = require("express-validator");
 
-const ForgotPasswordCalidationRules = () => {
+const ForgotPasswordvalidationRules = () => {
   return [
     body("phoneNumber")
       .exists()
@@ -53,6 +53,6 @@ const ForgotPasswordvalidate = (req, res, next) => {
 };
 
 module.exports = {
-  ForgotPasswordCalidationRules,
+  ForgotPasswordvalidationRules,
   ForgotPasswordvalidate,
 };

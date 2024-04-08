@@ -42,8 +42,62 @@ class PasswordService {
     }
   }
 
-  async checkpassword(vendorBody) {
-    const { phoneNumber, newPassword, userType } = vendorBody;
+  async changePassword({ data, jwtType, entityId }) {
+    try {
+      const { newPassword, oldPassword, entityType } = data;
+      let Entity;
+
+      if (
+        entityType !==
+        jwtType.charAt(0).toUpperCase() + jwtType.slice(1).toLowerCase()
+      ) {
+        const error = new Error(
+          `Please Send Valid Entity Type , Sending Entity type for ${jwtType} is not valid ${entityType}`
+        );
+        throw error;
+      }
+
+      if (entityType === "Vendor") {
+        Entity = Vendor;
+      } else {
+        Entity = User;
+      }
+
+      const entity = await Entity.findById(entityId);
+      if (!entity) {
+        const error = new Error("Entity Not Found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      const oldpasswordhash = createHmac("sha256", entity.salt)
+        .update(oldPassword)
+        .digest("hex");
+
+      if (entity.password !== oldpasswordhash) {
+        const error = new Error("Invalid Old Password");
+        error.statusCode = 400;
+        throw error;
+      }
+
+      const newpasswordhash = createHmac("sha256", entity.salt)
+        .update(newPassword)
+        .digest("hex");
+
+      if (entity.password === newpasswordhash) {
+        const error = new Error(
+          "New Password cannot be the same as old password"
+        );
+        error.statusCode = 400;
+        throw error;
+      }
+
+      entity.password = newPassword;
+      await entity.save();
+      return entity;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

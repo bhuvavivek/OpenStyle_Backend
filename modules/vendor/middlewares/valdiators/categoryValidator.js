@@ -7,19 +7,6 @@ const categoryValidationRule = () => {
       .withMessage("categoryName is Required")
       .notEmpty()
       .withMessage("categoryName cannot be empty"),
-
-    body("targetGender")
-      .optional()
-      .notEmpty()
-      .withMessage("targetGender cannot be empty")
-      .isIn(["Male", "Female", "Both"])
-      .withMessage("targetGender  must be one of ['Male', 'Female', 'Both']"),
-
-    body("vendorId")
-      .exists()
-      .withMessage("vendorId is Required")
-      .notEmpty()
-      .withMessage("vendorId cannot be empty"),
   ];
 };
 
