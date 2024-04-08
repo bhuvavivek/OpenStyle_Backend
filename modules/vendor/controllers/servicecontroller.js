@@ -22,6 +22,14 @@ class ServiceController {
     try {
       const subcategoryId = req.params.subcategoryId;
       const result = await Service.getAllServiceBySubCategoryId(subcategoryId);
+
+      if (result.length === 0) {
+        return res.status(200).json({
+          message: "No Service found for this SubCategory",
+          result: [],
+        });
+      }
+
       return res.status(200).json({ result });
     } catch (error) {
       next(error);

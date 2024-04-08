@@ -6,16 +6,6 @@ const vendorServiceSchema = new Schema({
     ref: "Vendor",
     require: true,
   },
-  categoryId: {
-    type: Schema.Types.ObjectId,
-    ref: "Category",
-    require: true,
-  },
-  subCategoryId: {
-    type: Schema.Types.ObjectId,
-    ref: "SubCategory",
-    require: true,
-  },
   serviceId: {
     type: Schema.Types.ObjectId,
     ref: "Service",

@@ -1,11 +1,12 @@
 const subcategoryservice = require("./subcategoryservice");
 const ServiceModel = require("../models/service");
+const vendorservice = require("./vendorservice");
+const VendorServiceModel = require("../models/vendorService");
 
 class Service {
   async createService(serviceData) {
     try {
-      const { serviceName, serviceDuration, servicePrice, subCategoryId } =
-        serviceData;
+      const { serviceName, subCategoryId } = serviceData;
 
       await subcategoryservice.getSubCategoryById(subCategoryId);
 
@@ -22,8 +23,6 @@ class Service {
 
       const service = new ServiceModel({
         serviceName,
-        serviceDuration,
-        servicePrice,
         subCategory: subCategoryId,
       });
 
@@ -46,10 +45,6 @@ class Service {
         const error = new Error("No Service Found");
         error.statusCode = 404;
         throw error;
-      }
-
-      if (services.length === 0) {
-        return { message: "No Service found for this SubCategory" };
       }
 
       return services;
@@ -86,6 +81,26 @@ class Service {
       service.serviceName = serviceName;
       await service.save();
       return { message: "Service Updated Successfully", service };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createVendorService(vendorId, serviceData) {
+    try {
+      const { serviceDuration, servicePrice, targetGender, serviceId } =
+        serviceData;
+
+      await vendorservice.getVendorById(vendorId);
+      const service = await this.getServiceById(serviceId);
+
+      if (!service) {
+        const error = new Error("Invalid ServiceId");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      const vendorService = new VendorServiceModel({});
     } catch (error) {
       throw error;
     }
