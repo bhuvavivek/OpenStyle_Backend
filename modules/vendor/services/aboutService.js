@@ -1,4 +1,4 @@
-const About = require("../models/about/about");
+const About = require("../models/about");
 const VendorService = require("./vendorservice");
 
 class AboutService {

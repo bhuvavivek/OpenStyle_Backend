@@ -1,8 +1,8 @@
 const moment = require("moment");
 const User = require("../../user/models/user");
-const Service = require("../../vendor/models/service/service");
+const Service = require("../../vendor/models/service");
 
-const Vendor = require("../../vendor/models/vendor/vendor");
+const Vendor = require("../../vendor/models/vendor");
 const Appointment = require("../models/appointment/appointment");
 const Coupon = require("../models/coupon/coupon");
 const shopTimeService = require("../../vendor/services/shoptimeService");

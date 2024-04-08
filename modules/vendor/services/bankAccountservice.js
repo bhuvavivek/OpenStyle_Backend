@@ -1,4 +1,4 @@
-const BankAccount = require("../models/bankAccount/bankAccount");
+const BankAccount = require("../models/bankAccount");
 const vendorservice = require("./vendorservice");
 
 class BankAccountService {

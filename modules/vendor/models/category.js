@@ -14,19 +14,3 @@ const categorySchema = new Schema(
 const Category = model("Category", categorySchema);
 
 module.exports = Category;
-
-/**
- * 
- * 
-targetGender: {
-  type: String,
-  enum: {
-    values: ["Male", "Female", "Both"],
-    message: "Target gender must be Male, Female, or Both",
-  },
-  default: "Both",
-  required: { value: true, message: "Target gender is required" },
-},
-
-
- */

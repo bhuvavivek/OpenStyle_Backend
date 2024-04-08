@@ -1,4 +1,4 @@
-const Vendor = require("../../vendor/models/vendor/vendor");
+const Vendor = require("../../vendor/models/vendor");
 const User = require("../../user/models/user");
 const { createHmac } = require("node:crypto");
 

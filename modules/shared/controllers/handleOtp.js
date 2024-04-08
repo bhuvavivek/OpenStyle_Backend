@@ -1,6 +1,6 @@
 const Otp = require("../models/otp");
 const User = require("../../user/models/user");
-const Vendor = require("../../vendor/models/vendor/vendor");
+const Vendor = require("../../vendor/models/vendor");
 
 const generateOtp = () => Math.floor(100000 + Math.random() * 900000);
 

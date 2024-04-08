@@ -1,4 +1,4 @@
-const Category = require("../models/category/category");
+const Category = require("../models/category");
 const VendorService = require("./vendorservice");
 
 class CategoryService {

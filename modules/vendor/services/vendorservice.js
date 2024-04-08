@@ -1,5 +1,5 @@
 const { generateToken } = require("../../shared/services/authentication");
-const Vendor = require("../models/vendor/vendor");
+const Vendor = require("../models/vendor");
 
 class vendorService {
   async getVendorById(vendorId) {

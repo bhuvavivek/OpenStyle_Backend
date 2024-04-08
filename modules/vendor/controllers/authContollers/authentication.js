@@ -1,5 +1,5 @@
 const { response } = require("express");
-const Vendor = require("../../models/vendor/vendor");
+const Vendor = require("../../models/vendor");
 
 const vendorservice = require("../../services/vendorservice");
 

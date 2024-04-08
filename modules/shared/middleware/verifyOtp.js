@@ -1,7 +1,7 @@
 const bycrypt = require("bcrypt");
 const Otp = require("../models/otp");
 const User = require("../../user/models/user");
-const Vendor = require("../../vendor/models/vendor/vendor");
+const Vendor = require("../../vendor/models/vendor");
 
 const otpVerification = async (req, res, next) => {
   try {

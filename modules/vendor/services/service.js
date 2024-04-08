@@ -1,5 +1,5 @@
 const subcategoryservice = require("./subcategoryservice");
-const ServiceModel = require("../models/service/service");
+const ServiceModel = require("../models/service");
 
 class Service {
   async createService(serviceData) {

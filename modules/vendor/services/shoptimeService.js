@@ -1,4 +1,4 @@
-const Shoptiming = require("../models/shoptiming/shoptiming");
+const Shoptiming = require("../models/shoptiming");
 const { TimeFormat } = require("../../../utils");
 
 class ShopTimeService {

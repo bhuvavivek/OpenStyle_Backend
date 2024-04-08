@@ -1,6 +1,6 @@
 const { model, Schema } = require("mongoose");
 const { createHmac, randomBytes } = require("node:crypto");
-const { generateToken } = require("../../../shared/services/authentication");
+const { generateToken } = require("../../shared/services/authentication");
 
 const vendorSchema = new Schema(
   {
