@@ -15,7 +15,7 @@ const { authenticate } = require("../middleware/authenticate");
 
 const router = Router();
 
-router.post(
+router.patch(
   "/",
   ForgotPasswordvalidationRules(),
   ForgotPasswordvalidate,
@@ -32,6 +32,6 @@ router.post(
   generateAndSendOtp
 );
 
-router.post("/change", authenticate, passwordcontroller.changePassword);
+router.patch("/change", authenticate, passwordcontroller.changePassword);
 
 module.exports = router;
