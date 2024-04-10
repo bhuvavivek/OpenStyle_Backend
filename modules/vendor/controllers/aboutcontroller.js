@@ -27,12 +27,6 @@ class AboutController {
       const vendorId = req.user.id;
 
       const authType = req.type;
-      if (authType !== "VENDOR") {
-        return res.status(401).json({
-          message: "You are not authorized to get About Details",
-          success: false,
-        });
-      }
 
       const result = await AboutService.getAbout(vendorId);
 
