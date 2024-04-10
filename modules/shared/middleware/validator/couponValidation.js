@@ -8,12 +8,6 @@ const couponValidationRule = () => {
       .notEmpty()
       .withMessage("coupenName cannot be empty"),
 
-    body("coupenCode")
-      .exists()
-      .withMessage("coupenCode is required")
-      .notEmpty()
-      .withMessage("coupenCode cannot be empty"),
-
     body("coupenType")
       .exists()
       .withMessage("coupenType is required")
