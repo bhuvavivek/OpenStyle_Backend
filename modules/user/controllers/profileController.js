@@ -1,23 +1,16 @@
 const User = require("../models/user");
+const userProfileService = require("../services/userProfileService");
 
-class ProfileController {
+class UserProfileController {
   async getUserProfile(req, res, next) {
     try {
       const userId = req.user.id;
-      const user = await User.findById(userId)
-        .select("-password")
-        .select("-salt")
-        .select("-__v");
-
-      if (!user) {
-        const error = new Error("User not found");
-        error.statusCode = 404;
-        throw error;
-      }
+      const result = await userProfileService.getUserProfile(userId);
 
       return res.status(200).json({
         message: "User profile fetched successfully",
-        user,
+        ...result.user.toObject(),
+        walletBalance: result.userWallet.balance,
       });
     } catch (error) {
       next(error);
@@ -40,4 +33,4 @@ class ProfileController {
   }
 }
 
-module.exports = new ProfileController();
+module.exports = new UserProfileController();

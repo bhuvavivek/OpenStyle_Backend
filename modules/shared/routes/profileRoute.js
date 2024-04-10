@@ -3,7 +3,7 @@ const { authenticate } = require("../../shared/middleware/authenticate");
 const {
   getUserProfile,
   editUserProfile,
-} = require("../../user//profileController");
+} = require("../../user/controllers/profileController");
 const router = express.Router();
 
 router.use(authenticate);

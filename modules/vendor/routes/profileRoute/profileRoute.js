@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.use(authenticate);
 router.get("/", getvendor);
-router.put("/", updateVendor);
+router.patch("/", updateVendor);
 
 module.exports = router;

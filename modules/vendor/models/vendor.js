@@ -49,10 +49,7 @@ const vendorSchema = new Schema(
       type: String,
       required: true,
     },
-    walletBalance: {
-      type: Number,
-      default: 0,
-    },
+
     upcomingAppointment: {
       type: Number,
       default: 0,
@@ -115,3 +112,9 @@ vendorSchema.static(
 
 const Vendor = model("Vendor", vendorSchema);
 module.exports = Vendor;
+
+// //   walletBalance: {
+//   type: Number,
+//   default: 0,
+// },
+// //

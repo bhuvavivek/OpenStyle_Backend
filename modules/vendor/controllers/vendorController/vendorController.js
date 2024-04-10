@@ -12,9 +12,11 @@ class VendorController {
         });
       }
       const result = await vendorservice.getVendorById(vendorId);
+
       return res.status(200).json({
         result: {
-          ...result.toObject(),
+          ...result.vendor.toObject(),
+          walletBalance: result.vendorWallet.balance,
           password: undefined,
           salt: undefined,
         },
@@ -26,8 +28,15 @@ class VendorController {
 
   updateVendor = async (req, res, next) => {
     try {
-      const vendorId = req.params.id;
+      const vendorId = req.user.id;
       const vendorData = req.body;
+
+      if (req.type !== "VENDOR") {
+        return res.status(401).json({
+          message: "You are not authorized to update vendor details",
+          success: false,
+        });
+      }
 
       const result = await vendorservice.updateVendor(vendorId, vendorData);
       return res.status(200).json({
