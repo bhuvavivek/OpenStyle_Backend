@@ -5,7 +5,7 @@ const Vendor = require("../models/vendor");
 class vendorService {
   async getVendorById(vendorId) {
     try {
-      const result = await Vendor.findById(vendorId).select("-__v");
+      const vendor = await Vendor.findById(vendorId).select("-__v");
       if (!vendor) {
         const error = new Error("Vendor not found");
         error.statusCode = 404;
