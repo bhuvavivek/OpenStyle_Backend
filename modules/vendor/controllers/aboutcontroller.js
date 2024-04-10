@@ -24,9 +24,7 @@ class AboutController {
 
   async getAbout(req, res, next) {
     try {
-      const vendorId = req.user.id;
-
-      const authType = req.type;
+      const vendorId = req.params.id;
 
       const result = await AboutService.getAbout(vendorId);
 

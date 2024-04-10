@@ -6,9 +6,7 @@ const router = Router();
 
 router.use(authenticate);
 
-router
-  .route("/")
-  .get(AboutController.getAbout)
-  .patch(AboutController.UpdateAbout);
+router.patch("/", AboutController.UpdateAbout);
 
+router.get("/:id", AboutController.getAbout);
 module.exports = router;
