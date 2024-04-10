@@ -8,5 +8,5 @@ router.use(authenticate);
 
 router.patch("/", AboutController.UpdateAbout);
 
-router.get("/:id", AboutController.getAbout);
+router.get("/", AboutController.getAbout);
 module.exports = router;

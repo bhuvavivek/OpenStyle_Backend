@@ -24,8 +24,22 @@ class AboutController {
 
   async getAbout(req, res, next) {
     try {
-      const vendorId = req.params.id;
+      let vendorId;
 
+      if (req.type === "VENDOR") {
+        vendorId = req.user.id;
+      }
+
+      if (req.query.vendorid && req.type !== "VENDOR") {
+        vendorId = req.query.vendorid;
+      }
+
+      if (req.type !== "VENDOR" && !req.query.vendorid) {
+        return res.status(401).json({
+          message: "You are not authorized to get About Details",
+          success: false,
+        });
+      }
       const result = await AboutService.getAbout(vendorId);
 
       return res
