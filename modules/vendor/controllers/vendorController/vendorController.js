@@ -41,7 +41,8 @@ class VendorController {
       const result = await vendorservice.updateVendor(vendorId, vendorData);
       return res.status(200).json({
         result: {
-          ...result.toObject(),
+          ...result.updatedVendor.toObject(),
+          walletBalance: result.vendorWallet.balance,
           password: undefined,
           salt: undefined,
         },

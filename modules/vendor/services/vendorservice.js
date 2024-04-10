@@ -85,9 +85,13 @@ class vendorService {
         vendorId,
         vendorData,
         { new: true }
-      );
+      ).select("-__v");
 
-      return updatedVendor;
+      let vendorWallet = await VendorWallet.findOne({
+        vendor: vendorId,
+      });
+
+      return { updatedVendor, vendorWallet };
     } catch (error) {
       throw error;
     }
