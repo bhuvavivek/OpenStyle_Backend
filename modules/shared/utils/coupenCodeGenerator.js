@@ -32,7 +32,7 @@ function shuffleString(str) {
 function generateCoupenCode() {
   const characters = generateRandomString(4);
   const numbers = generateCoupenWithTimeStamp(3);
-  return `OpenStyle${numbers}${characters}`;
+  return `OpenStyle${numbers}${characters}`.toUpperCase();
 }
 
 module.exports = generateCoupenCode;
