@@ -4,6 +4,11 @@ class CouponController {
   createCoupon = async (req, res, next) => {
     try {
       const couponData = req.body;
+      if (coupenData.coupenCode) {
+        const error = new Error("You Not Authorized To Create CoupenCode");
+        error.statusCode = 400;
+        throw error;
+      }
 
       if (req.type !== "VENDOR") {
         const error = new Error(
@@ -12,6 +17,7 @@ class CouponController {
         error.statusCode = 403;
         throw error;
       }
+
       const result = await couponService.createCoupon(couponData, req.user.id);
       if (!result) {
         const error = new Error("Coupon not created");
@@ -62,7 +68,7 @@ class CouponController {
       }
       const couponId = req.params.id;
       const result = await couponService.deleteCoupon(couponId);
-      return res.status(400).json(result);
+      return res.status(200).json(result);
     } catch (error) {
       next(error);
     }

@@ -1,18 +1,20 @@
 const vendorservice = require("../../vendor/services/vendorservice");
 const Coupon = require("../models/coupon/coupon");
+const generateCoupenCode = require("../utils/coupenCodeGenerator");
 
 class CouponService {
   async createCoupon(couponData, vendorId) {
     try {
       const {
         coupenName,
-        coupenCode,
         coupenType,
         minApplciableOrderPrice,
         maxDiscountPrice,
         discountPercentage,
         expireDate,
       } = couponData;
+
+      const coupenCode = generateCoupenCode();
 
       await vendorservice.getVendorById(vendorId);
 

@@ -9,6 +9,7 @@ const PasswordRoute = require("./modules/shared/routes/passwordRoute");
 const errorhandlingmiddleware = require("./modules/shared/middleware/errorhandlingmiddleware");
 const BankRoute = require("./modules/shared/routes/bankRoute");
 const session = require("express-session");
+const scheduleJobs = require("./modules/shared/services/cornJobs");
 const app = express();
 
 require("dotenv").config();
@@ -19,7 +20,10 @@ const PORT = process.env.PORT || 3000;
 
 // connect mongodb
 connectMongoDb(process.env.DB_URL)
-  .then(() => console.log("mongodb connected"))
+  .then(() => {
+    console.log("mongodb connected");
+    scheduleJobs();
+  })
   .catch((err) => console.log(err));
 
 app.use(express.json());
