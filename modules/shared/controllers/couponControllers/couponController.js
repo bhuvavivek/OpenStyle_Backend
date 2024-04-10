@@ -4,8 +4,8 @@ class CouponController {
   createCoupon = async (req, res, next) => {
     try {
       const couponData = req.body;
-      if (coupenData.coupenCode) {
-        const error = new Error("You Not Authorized To Create CoupenCode");
+      if (couponData.coupenCode) {
+        const error = new Error("You Not Authorized To Create CouponCode");
         error.statusCode = 400;
         throw error;
       }
