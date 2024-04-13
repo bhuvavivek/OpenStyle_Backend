@@ -13,9 +13,9 @@ const vendorReviewSchema = new Schema(
     rating: {
       type: Number,
       required: true,
-      default: 3,
       min: 1,
       max: 5,
+      enum: [1, 2, 3, 4, 5],
     },
     review: {
       type: String,

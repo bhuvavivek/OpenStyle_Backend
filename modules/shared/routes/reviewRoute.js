@@ -12,6 +12,8 @@ router.use(authenticate);
 
 router
   .route("/")
-  .post(reviewValidationRule(), globalValidate, ReviewController.addReviews)
+  .put(reviewValidationRule(), globalValidate, ReviewController.addReviews)
   .get(ReviewController.getReviews);
+
+router.get("/:id", ReviewController.getReview);
 module.exports = router;

@@ -26,7 +26,7 @@ class ReviewController {
         throw error;
       }
 
-      let reviews = await ReviewService.getReviews(vendorId);
+      let reviews = await ReviewService.getReviews(vendorId , req.query.limit);
 
       if (!reviews || reviews.length === 0) {
         return res.status(200).json({
@@ -76,6 +76,44 @@ class ReviewController {
       return res.status(201).json({
         message: "Review added successfully",
         success: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getReview(req, res, next) {
+    try {
+      if (req.type !== "USER") {
+        const error = new Error("You Are Not Authorized to get review");
+        error.statusCode = 400;
+        throw error;
+      }
+      const vendorId = req.params.id;
+      if (!vendorId) {
+        const error = new Error("Vendor id is required");
+        error.statusCode = 400;
+        throw error;
+      }
+
+      const review = await ReviewService.getReview(vendorId, req.user.id);
+
+      if (!review) {
+        return res.status(200).json({
+          message: "No review found",
+          review: {
+            rating: 3,
+            review: "",
+          },
+        });
+      }
+
+      return res.status(200).json({
+        message: "Review fetched successfully",
+        review: {
+          rating: review.rating,
+          review: review.review,
+        },
       });
     } catch (error) {
       next(error);
