@@ -32,6 +32,10 @@ const userSchema = new Schema(
       default: "Other",
       required: true,
     },
+    userProfile: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );
