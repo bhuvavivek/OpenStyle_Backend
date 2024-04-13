@@ -8,6 +8,7 @@ const appoinementRoute = require("./modules/shared/routes/apppiointmentRoute");
 const PasswordRoute = require("./modules/shared/routes/passwordRoute");
 const errorhandlingmiddleware = require("./modules/shared/middleware/errorhandlingmiddleware");
 const BankRoute = require("./modules/shared/routes/bankRoute");
+const reviewRoute = require("./modules/shared/routes/reviewRoute");
 const session = require("express-session");
 const scheduleJobs = require("./modules/shared/services/cornJobs");
 const app = express();
@@ -46,6 +47,7 @@ app.use("/api/appointment", appoinementRoute);
 app.use("/api/coupon", couponRoute);
 app.use("/api/password", PasswordRoute);
 app.use("/api/bankaccount", BankRoute);
+app.use("/api/review", reviewRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello World");

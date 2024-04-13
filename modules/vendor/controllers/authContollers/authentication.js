@@ -28,7 +28,7 @@ const handleSignin = async (req, res) => {
       return res.status(400).json({ message: "phoneNumber must be number" });
     }
 
-    if (phoneNumber.length !== 10) {
+    if (phoneNumber.toString().length !== 10) {
       return res.status(400).json({ message: "phoneNumber must be 10 digit" });
     }
 

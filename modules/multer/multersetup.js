@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 
 // sotrage setup for multer
-const storage = multer.diskStorage({
+const shopImageStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/shopimages");
   },
@@ -12,7 +12,29 @@ const storage = multer.diskStorage({
   },
 });
 
-// multer upload setup
-const upload = multer({ storage: storage });
+// profile image url
+const userProfileStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads/profileimages/user");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + path.basename(file.originalname));
+  },
+});
 
-module.exports = upload;
+// profile image url
+const vendorProfileStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads/profileimages/vendor");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + path.basename(file.originalname));
+  },
+});
+
+// multer upload setup
+const uploadShopImages = multer({ storage: shopImageStorage });
+const uploadUserProfile = multer({ storage: userProfileStorage });
+const uploadVendorProfile = multer({ storage: vendorProfileStorage });
+
+module.exports = { uploadShopImages, uploadUserProfile, uploadVendorProfile };

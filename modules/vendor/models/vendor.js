@@ -1,6 +1,7 @@
 const { model, Schema } = require("mongoose");
 const { createHmac, randomBytes } = require("node:crypto");
 const { generateToken } = require("../../shared/services/authentication");
+const VendorReview = require("../../shared/models/vendorReviews");
 
 const vendorSchema = new Schema(
   {
@@ -107,6 +108,11 @@ vendorSchema.static(
     return token;
   }
 );
+
+vendorSchema.pre("remove", function (next) {
+  VendorReview.remove({ vendor: this._id }).exec();
+  next();
+});
 
 const Vendor = model("Vendor", vendorSchema);
 module.exports = Vendor;
