@@ -17,16 +17,23 @@ const handleCreateVendor = async (req, res, next) => {
 
 const handleSignin = async (req, res) => {
   try {
-    const { emailAddress, password } = req.body;
+    const { phoneNumber, password } = req.body;
 
-    if (!emailAddress || !password) {
+    if (!phoneNumber || !password) {
       return res
         .status(400)
-        .json({ message: "Both email and password are required" });
+        .json({ message: "Both phoneNumber and password are required" });
+    }
+    if (isNaN(phoneNumber)) {
+      return res.status(400).json({ message: "phoneNumber must be number" });
+    }
+
+    if (phoneNumber.length !== 10) {
+      return res.status(400).json({ message: "phoneNumber must be 10 digit" });
     }
 
     const token = await Vendor.matchPasswordAndGenerateToken(
-      emailAddress,
+      phoneNumber,
       password
     );
 

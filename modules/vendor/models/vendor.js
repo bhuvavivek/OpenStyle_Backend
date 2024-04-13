@@ -87,8 +87,8 @@ vendorSchema.pre("save", function (next) {
 
 vendorSchema.static(
   "matchPasswordAndGenerateToken",
-  async function (email, password) {
-    const vendor = await this.findOne({ emailAddress: email });
+  async function (phone, password) {
+    const vendor = await this.findOne({ phoneNumber: phone });
 
     if (!vendor) throw new Error("Vendor not found");
 
@@ -110,9 +110,3 @@ vendorSchema.static(
 
 const Vendor = model("Vendor", vendorSchema);
 module.exports = Vendor;
-
-// //   walletBalance: {
-//   type: Number,
-//   default: 0,
-// },
-// //
