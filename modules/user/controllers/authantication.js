@@ -47,16 +47,16 @@ const handlecreateUser = async (req, res) => {
 
 const handleSignin = async (req, res) => {
   try {
-    const { emailAddress, password } = req.body;
+    const { phoneNumber, password } = req.body;
 
-    if (!emailAddress || !password) {
+    if (!phoneNumber || !password) {
       return res
         .status(400)
-        .json({ message: "Both email and password are required" });
+        .json({ message: "Both phoneNumber and password are required" });
     }
 
     const token = await User.matchPasswordAndGenerateToken(
-      emailAddress,
+      phoneNumber,
       password
     );
 
