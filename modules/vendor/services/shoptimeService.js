@@ -49,32 +49,32 @@ class ShopTimeService {
 
       let shopTime = await Shoptiming.findOne({ vendor: vendorId });
 
-      if (!shopTime) {
-        const defaultDay = {
-          opentime: "12:00 AM",
-          closetime: "12:00 AM",
-          shopisOpen: false,
-        };
+      // if (!shopTime) {
+      //   const defaultDay = {
+      //     opentime: "12:00 AM",
+      //     closetime: "12:00 AM",
+      //     shopisOpen: false,
+      //   };
 
-        shopTime = new Shoptiming({
-          vendor: vendorId,
-          sunday: defaultDay,
-          monday: defaultDay,
-          tuesday: defaultDay,
-          wednesday: defaultDay,
-          thursday: defaultDay,
-          friday: defaultDay,
-          saturday: defaultDay,
-        });
+      //   shopTime = new Shoptiming({
+      //     vendor: vendorId,
+      //     sunday: defaultDay,
+      //     monday: defaultDay,
+      //     tuesday: defaultDay,
+      //     wednesday: defaultDay,
+      //     thursday: defaultDay,
+      //     friday: defaultDay,
+      //     saturday: defaultDay,
+      //   });
 
-        await shopTime.save();
-      }
+      //   await shopTime.save();
+      // }
 
       return shopTime;
     } catch (error) {
       throw error;
     }
   }
-}
+}w
 
 module.exports = new ShopTimeService();

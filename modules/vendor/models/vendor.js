@@ -2,6 +2,7 @@ const { model, Schema } = require("mongoose");
 const { createHmac, randomBytes } = require("node:crypto");
 const { generateToken } = require("../../shared/services/authentication");
 const VendorReview = require("../../shared/models/vendorReviews");
+const Shoptiming = require("./shoptiming");
 
 const vendorSchema = new Schema(
   {
@@ -127,6 +128,18 @@ vendorSchema.pre("remove", async function (next) {
     next();
   } catch (error) {
     console.error("Error in pre-remove middleware:", error);
+    throw error;
+  }
+});
+
+// post funciton to create a shoptiming for the vendor
+vendorSchema.post("save", async function (doc, next) {
+  try {
+    const shoptiming = await Shoptiming.findOne({ vendor: doc._id });
+    if (shoptiming) return next();
+    await Shoptiming.create({ vendor: doc._id });
+    next();
+  } catch (error) {
     throw error;
   }
 });
