@@ -137,7 +137,26 @@ vendorSchema.post("save", async function (doc, next) {
   try {
     const shoptiming = await Shoptiming.findOne({ vendor: doc._id });
     if (shoptiming) return next();
-    await Shoptiming.create({ vendor: doc._id });
+
+    const defaultDay = {
+      opentime: "12:00 AM",
+      closetime: "12:00 AM",
+      shopisOpen: false,
+    };
+
+    const shopTime = new Shoptiming({
+      vendor: doc._id,
+      sunday: defaultDay,
+      monday: defaultDay,
+      tuesday: defaultDay,
+      wednesday: defaultDay,
+      thursday: defaultDay,
+      friday: defaultDay,
+      saturday: defaultDay,
+    });
+
+    await shopTime.save();
+
     next();
   } catch (error) {
     throw error;

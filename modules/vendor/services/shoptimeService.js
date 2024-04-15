@@ -75,6 +75,6 @@ class ShopTimeService {
       throw error;
     }
   }
-}w
+}
 
 module.exports = new ShopTimeService();
