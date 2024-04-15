@@ -16,7 +16,7 @@ class UserProfileService {
 
       let userWallet = await UserWallet.findOne({ user: userId });
       if (!userWallet) {
-        userWallet = await UserWallet.create({ user: userId, balance: 0.0 });
+        userWallet = await UserWallet.create({ user: userId });
       }
 
       return { user, userWallet };

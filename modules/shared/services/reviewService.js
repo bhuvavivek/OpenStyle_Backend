@@ -5,6 +5,7 @@ const VendorReview = require("../models/vendorReviews");
 class ReviewService {
   getReviews = async (vendorId, limit) => {
     try {
+      console.log(limit);
       const vendor = await Vendor.findById(vendorId);
       if (!vendor) {
         const error = new Error("Vendor not found");
@@ -18,10 +19,11 @@ class ReviewService {
           .populate("user")
           .limit(3)
           .sort({ createdAt: -1 });
+      } else {
+        reviews = await VendorReview.find({ vendor: vendorId })
+          .populate("user")
+          .sort({ createdAt: -1 });
       }
-      reviews = await VendorReview.find({ vendor: vendorId })
-        .populate("user")
-        .sort({ createdAt: -1 });
 
       return reviews;
     } catch (error) {
@@ -45,26 +47,28 @@ class ReviewService {
         throw error;
       }
 
-      const reviewExists = await VendorReview.findOneAndUpdate(
-        {
-          vendor: userReview.vendorId,
-          user: userReview.userId,
-        },
-        userReview,
-        { new: true }
-      );
+      const reviewExists = await VendorReview.findOne({
+        vendor: userReview.vendorId,
+        user: userReview.userId,
+      });
 
       if (reviewExists) {
+        reviewExists.rating = userReview.rating;
+        reviewExists.review = userReview.review;
+        reviewExists.title = userReview.title;
+
+        await reviewExists.save();
         return reviewExists;
       }
 
-      const review = await VendorReview.create({
+      const review = await new VendorReview({
         vendor: userReview.vendorId,
         user: userReview.userId,
         rating: userReview.rating,
         review: userReview.review,
         title: userReview.title,
       });
+      await review.save();
 
       return review;
     } catch (error) {

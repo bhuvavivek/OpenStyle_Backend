@@ -16,7 +16,7 @@ class VendorController {
       return res.status(200).json({
         result: {
           ...result.vendor.toObject(),
-          walletBalance: result.vendorWallet.balance,
+          walletBalance: result.vendorWallet?.balance,
           password: undefined,
           salt: undefined,
         },
@@ -42,7 +42,7 @@ class VendorController {
       return res.status(200).json({
         result: {
           ...result.updatedVendor.toObject(),
-          walletBalance: result.vendorWallet.balance,
+          walletBalance: result.vendorWallet?.balance,
           password: undefined,
           salt: undefined,
         },

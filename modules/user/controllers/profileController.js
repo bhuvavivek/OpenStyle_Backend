@@ -10,7 +10,7 @@ class UserProfileController {
       return res.status(200).json({
         message: "User profile fetched successfully",
         ...result.user.toObject(),
-        walletBalance: result.userWallet.balance,
+        walletBalance: result.userWallet?.balance,
       });
     } catch (error) {
       next(error);

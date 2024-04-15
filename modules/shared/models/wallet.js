@@ -4,10 +4,12 @@ const userWalletSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
+    require: true,
   },
   balance: {
     type: Number,
     default: 0,
+    require: true,
   },
 });
 
@@ -15,11 +17,12 @@ const vendorWalletSchema = new Schema({
   vendor: {
     type: Schema.Types.ObjectId,
     ref: "Vendor",
-    required: true,
+    require: true,
   },
   balance: {
     type: Number,
     default: 0,
+    require: true,
   },
 });
 

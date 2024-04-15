@@ -16,7 +16,7 @@ class vendorService {
         vendor: vendorId,
       });
       if (!vendorWallet) {
-        await VendorWallet.create({ vendor: vendorId, balance: 0.0 });
+        await VendorWallet.create({ vendor: vendorId });
       }
       return { vendor, vendorWallet };
     } catch (error) {

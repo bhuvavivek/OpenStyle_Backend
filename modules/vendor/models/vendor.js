@@ -67,23 +67,35 @@ const vendorSchema = new Schema(
       type: String,
       default: "",
     },
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
+    ratingsCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
 
 vendorSchema.pre("save", function (next) {
-  const vendor = this;
-  if (!vendor.isModified("password")) return;
+  try {
+    const vendor = this;
+    if (!vendor.isModified("password")) return next();
 
-  const salt = randomBytes(16).toString();
-  const hashPassword = createHmac("sha256", salt)
-    .update(vendor.password)
-    .digest("hex");
+    const salt = randomBytes(16).toString();
+    const hashPassword = createHmac("sha256", salt)
+      .update(vendor.password)
+      .digest("hex");
 
-  this.salt = salt;
-  this.password = hashPassword;
+    this.salt = salt;
+    this.password = hashPassword;
 
-  next();
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 vendorSchema.static(
@@ -109,9 +121,14 @@ vendorSchema.static(
   }
 );
 
-vendorSchema.pre("remove", function (next) {
-  VendorReview.remove({ vendor: this._id }).exec();
-  next();
+vendorSchema.pre("remove", async function (next) {
+  try {
+    await VendorReview.deleteMany({ vendor: this._id });
+    next();
+  } catch (error) {
+    console.error("Error in pre-remove middleware:", error);
+    throw error;
+  }
 });
 
 const Vendor = model("Vendor", vendorSchema);
