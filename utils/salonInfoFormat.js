@@ -17,6 +17,7 @@ exports.formatSalonInfo = (salonInfo) => {
     openTime: salonInfo.openTime,
     closeTime: salonInfo.closeTime,
     shopIsOpen: salonInfo.shopIsOpen,
+    averageRating: salonInfo.averageRating,
     isFav: salonInfo.isFavourite,
     offer: "",
     offerList: "",
