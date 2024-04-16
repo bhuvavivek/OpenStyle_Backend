@@ -19,6 +19,8 @@ exports.formatSalonInfo = (salonInfo) => {
     shopIsOpen: salonInfo.shopIsOpen,
     isFav: salonInfo.isFavourite,
     offer: "",
+    offerList: "",
     distance: "",
+    profileImage: "",
   };
 };

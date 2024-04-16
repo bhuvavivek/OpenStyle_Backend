@@ -37,6 +37,14 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+    lattitude: {
+      type: String,
+      required: true,
+    },
+    longitude: {
+      type: String,
+      require: true,
+    },
   },
   { timestamps: true }
 );
