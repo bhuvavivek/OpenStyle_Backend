@@ -1,3 +1,5 @@
+const { formatSalonInfo } = require("../../../utils/salonInfoFormat");
+const salonInfoService = require("../../user/services/salonInfoService");
 const FavouriteSalonService = require("../services/favouriteSalonService");
 
 class FavouriteSalonController {
@@ -47,6 +49,37 @@ class FavouriteSalonController {
       return res
         .status(200)
         .json({ message: "Salon is removed from favourite" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getFavouriteSalon(req, res, next) {
+    try {
+      if (req.type !== "USER") {
+        return res.status(400).json({ message: "User is not authorized " });
+      }
+
+      let favSalonInfos = await salonInfoService.getSalons(req.user.id);
+
+      if (!favSalonInfos) {
+        return res.status(200).json({ message: "Salon Not Found", data: [] });
+      }
+
+      favSalonInfos = favSalonInfos.map((favsalon) =>
+        formatSalonInfo(favsalon)
+      );
+
+      // filter the salon which is favourite
+      favSalonInfos = favSalonInfos.filter((salon) => salon.isFav === true);
+
+      if (!favSalonInfos) {
+        return res
+          .status(200)
+          .json({ message: "Salon Not Added To Fav", data: [] });
+      }
+
+      return res.status(200).json({ data: favSalonInfos });
     } catch (error) {
       next(error);
     }

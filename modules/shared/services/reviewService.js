@@ -5,7 +5,6 @@ const VendorReview = require("../models/vendorReviews");
 class ReviewService {
   getReviews = async (vendorId, limit) => {
     try {
-      console.log(limit);
       const vendor = await Vendor.findById(vendorId);
       if (!vendor) {
         const error = new Error("Vendor not found");
@@ -25,7 +24,11 @@ class ReviewService {
           .sort({ createdAt: -1 });
       }
 
-      return reviews;
+      return {
+        reviews,
+        averageRating: vendor.averageRating,
+        totalRatingCount: vendor.ratingsCount,
+      };
     } catch (error) {
       throw error;
     }

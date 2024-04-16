@@ -26,16 +26,18 @@ class ReviewController {
         throw error;
       }
 
-      let reviews = await ReviewService.getReviews(vendorId , req.query.limit);
+      const result = await ReviewService.getReviews(vendorId, req.query.limit);
 
-      if (!reviews || reviews.length === 0) {
+      if (!result.reviews || result.reviews.length === 0) {
         return res.status(200).json({
           message: "No reviews found",
           reviews: [],
+          averageRating: 0,
+          totalRatingCount: 0,
         });
       }
 
-      reviews = reviews.map((review) => {
+      const reviews = result.reviews.map((review) => {
         return {
           userProfile: review.user.userProfile,
           userName: review.user.fullName,
@@ -47,7 +49,9 @@ class ReviewController {
       });
       return res.status(200).json({
         message: "Reviews fetched successfully",
-        reviews,
+        reviews: reviews,
+        averageRating: result.averageRating,
+        totalRatingCount: result.totalRatingCount,
       });
     } catch (error) {
       next(error);
