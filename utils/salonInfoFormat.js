@@ -1,6 +1,6 @@
 exports.formatSalonInfo = (salonInfo) => {
   return {
-    id: salonInfo._id,
+    shopId: salonInfo._id,
     shopName: salonInfo.shopName,
     emailAddress: salonInfo.emailAddress,
     phoneNumber: salonInfo.phoneNumber,

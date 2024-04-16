@@ -14,6 +14,9 @@ const session = require("express-session");
 const scheduleJobs = require("./modules/shared/services/cornJobs");
 const app = express();
 
+// for cloudnery
+const cloudinary = require("cloudinary").v2;
+
 require("dotenv").config();
 
 const PORT = process.env.PORT || 3000;
@@ -27,6 +30,14 @@ connectMongoDb(process.env.DB_URL)
     scheduleJobs();
   })
   .catch((err) => console.log(err));
+
+// Return "https" URLs by setting secure: true
+cloudinary.config({
+  secure: true,
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
 
 app.use(express.json());
 app.use(
@@ -55,6 +66,29 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
+app.post("/images/cloudnery", async (req, res) => {
+  // Use the uploaded file's name as the asset's public ID and
+  // allow overwriting the asset with new versions
+
+  const options = {
+    use_filename: true,
+    unique_filename: false,
+    overwrite: true,
+    folder: "demo",
+    resource_type: "image",
+  };
+
+  try {
+    const result = await cloudinary.uploader.upload(
+      "https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
+      options
+    );
+
+    res.json(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
 // Use the error handling middleware
 app.use(errorhandlingmiddleware);
 
