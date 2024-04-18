@@ -10,18 +10,20 @@ const errorhandlingmiddleware = require("./modules/shared/middleware/errorhandli
 const BankRoute = require("./modules/shared/routes/bankRoute");
 const reviewRoute = require("./modules/shared/routes/reviewRoute");
 const salonRoute = require("./modules/user/routes/salonInfoRoute");
+const imageRoute = require("./modules/shared/routes/imageRoute");
 const session = require("express-session");
 const scheduleJobs = require("./modules/shared/services/cornJobs");
-const app = express();
+const {
+  uploadMiddleware,
+  extractPublicId,
+} = require("./modules/shared/middleware/uploadmiddleware");
+const cloudinary = require("./config/cloudineryConfig");
 
-// for cloudnery
-const cloudinary = require("cloudinary").v2;
+const app = express();
 
 require("dotenv").config();
 
 const PORT = process.env.PORT || 3000;
-
-// middleware
 
 // connect mongodb
 connectMongoDb(process.env.DB_URL)
@@ -31,13 +33,7 @@ connectMongoDb(process.env.DB_URL)
   })
   .catch((err) => console.log(err));
 
-// Return "https" URLs by setting secure: true
-cloudinary.config({
-  secure: true,
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET,
-});
+// middleware
 
 app.use(express.json());
 app.use(
@@ -61,34 +57,12 @@ app.use("/api/password", PasswordRoute);
 app.use("/api/bankaccount", BankRoute);
 app.use("/api/review", reviewRoute);
 app.use("/api/salon", salonRoute);
+app.use("/api/images", imageRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.post("/images/cloudnery", async (req, res) => {
-  // Use the uploaded file's name as the asset's public ID and
-  // allow overwriting the asset with new versions
-
-  const options = {
-    use_filename: true,
-    unique_filename: false,
-    overwrite: true,
-    folder: "demo",
-    resource_type: "image",
-  };
-
-  try {
-    const result = await cloudinary.uploader.upload(
-      "https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
-      options
-    );
-
-    res.json(result);
-  } catch (error) {
-    console.log(error);
-  }
-});
 // Use the error handling middleware
 app.use(errorhandlingmiddleware);
 
