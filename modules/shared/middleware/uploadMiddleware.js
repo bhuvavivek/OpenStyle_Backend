@@ -13,7 +13,7 @@ const cloudinaryConfig = {
 
 // Cloudinary Configuration
 cloudinary.config(cloudinaryConfig);
-
+// hewfjrej
 function uploadMiddleware(userType) {
   let folderName;
   if (userType === "USER") {
