@@ -1,7 +1,8 @@
 const User = require("../../user/models/user");
 const Vendor = require("../../vendor/models/vendor");
-const { extractPublicId } = require("../middleware/uploadmiddleware");
+
 const cloudinary = require("../../../config/cloudineryConfig");
+const extractPublicId = require("../utils/extractPublicId");
 // imageService.js
 class ImageService {
   async addProfileImage(type, file, userEntity) {

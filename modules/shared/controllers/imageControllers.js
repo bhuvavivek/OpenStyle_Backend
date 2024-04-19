@@ -1,7 +1,7 @@
 const UserProfileService = require("../../user/services/userProfileService");
 
 const VendorService = require("../../vendor/services/vendorservice");
-const { uploadMiddleware } = require("../middleware/uploadmiddleware");
+const uploadMiddleware = require("../middleware/uploadMiddleware");
 const ImageService = require("../services/imageService");
 
 class ImageController {
