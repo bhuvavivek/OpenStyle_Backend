@@ -28,6 +28,13 @@ class ImageService {
       }
 
       if (!userEntity[entity][entityProfile]) {
+        let EntityProfile = await entityModel.findByIdAndUpdate(
+          userEntity[entity]._id,
+          {
+            [entityProfile]: file.path,
+          }
+        );
+        return EntityProfile;
       }
 
       // delete old image
@@ -51,14 +58,6 @@ class ImageService {
       });
 
       console.log(deleteProfileImage);
-      // const EntityProfile = await entityModel.findByIdAndUpdate(
-      //   userEntity[entity]._id,
-      //   {
-      //     [entityProfile]: file.path,
-      //   }
-      // );
-
-      // console.log(EntityProfile);
 
       return file;
     } catch (error) {
