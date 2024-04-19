@@ -25,6 +25,7 @@ class ImageController {
           req.file,
           user
         );
+        console.log("helloo");
         return res.status(200).json({ status: true, message: result });
       });
     } catch (error) {
