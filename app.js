@@ -13,11 +13,6 @@ const salonRoute = require("./modules/user/routes/salonInfoRoute");
 const imageRoute = require("./modules/shared/routes/imageRoute");
 const session = require("express-session");
 const scheduleJobs = require("./modules/shared/services/cornJobs");
-const {
-  uploadMiddleware,
-  extractPublicId,
-} = require("./modules/shared/middleware/uploadmiddleware");
-const cloudinary = require("./config/cloudineryConfig");
 
 const app = express();
 
