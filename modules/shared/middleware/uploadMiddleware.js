@@ -21,7 +21,7 @@ function uploadMiddleware(userType) {
     folderName = "UserProfile";
   }
   if (userType === "VENDOR") {
-    folderName = "VendorProfile";
+    folderName = "vendorProfileImage";
   }
 
   const allowedFormats = ["jpg", "jpeg", "png", "gif"]; // Allowed image formats
