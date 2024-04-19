@@ -10,22 +10,18 @@ const cloudinaryConfig = {
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
   api_secret: process.env.CLOUD_API_SECRET,
+  secure: true,
 };
 
 // Cloudinary Configuration
 cloudinary.config(cloudinaryConfig);
 // hewfjrej
-function uploadMiddleware(userType) {
-  let folderName;
-  if (userType === "USER") {
-    folderName = "UserProfile";
-  }
-  if (userType === "VENDOR") {
-    folderName = "VendorProfile";
-  }
-
+function uploadMiddleware(folderName) {
   const allowedFormats = ["jpg", "jpeg", "png", "gif"]; // Allowed image formats
 
+  if (!folderName) {
+    throw new Error("Folder name is required");
+  }
   const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: (req, file) => {
@@ -68,4 +64,16 @@ async function deleteImage(publicId) {
   }
 }
 
-module.exports = { uploadMiddleware, deleteImage };
+async function getAllSlider(folderName) {
+  try {
+    const result = await cloudinary.api.resources({
+      type: "upload",
+      prefix: folderName,
+    });
+    return result.resources;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { uploadMiddleware, deleteImage, getAllSlider };

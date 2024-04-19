@@ -1,4 +1,5 @@
 const { formatSalonInfo } = require("../../../utils/salonInfoFormat");
+const imageService = require("../../shared/services/imageService");
 const salonInfoService = require("../services/salonInfoService");
 
 class SalonInfoController {
@@ -16,11 +17,7 @@ class SalonInfoController {
 
       salonInfos = salonInfos.map((saloninfo) => formatSalonInfo(saloninfo));
 
-      const sliderImages = [
-        "https://media.istockphoto.com/id/1481299284/photo/asian-backpacker-on-mountain-peak-and-using-binoculars-looking-forward.jpg?s=1024x1024&w=is&k=20&c=JqwRK2QEaY9w8SBO0z3xrsZExJFLmzbU0wQbEJOg_PA=",
-        "https://media.istockphoto.com/id/873289826/photo/successful-young-woman-backpacker-jumping-on-cliffs-edge.jpg?s=1024x1024&w=is&k=20&c=jBA8mG0guXeU-nzyhT_XoLmnbcsT-CIzo9hDkT1rSyk=",
-        "https://media.istockphoto.com/id/487076033/photo/4k-television-display.jpg?s=2048x2048&w=is&k=20&c=l3K0tAFMjxWx7T5dReY2RSS8dX8ZvREMjTrJDQsgTyc=",
-      ];
+      const sliderImages = await imageService.getSliderImages("UserSlider");
 
       return res.status(200).json({ data: salonInfos, sliderImages });
     } catch (error) {

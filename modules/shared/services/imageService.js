@@ -2,7 +2,7 @@ const User = require("../../user/models/user");
 const Vendor = require("../../vendor/models/vendor");
 
 const extractPublicId = require("../utils/extractPublicId");
-const { deleteImage } = require("../middleware/uploadcloudinary");
+const { deleteImage, getAllSlider } = require("../middleware/uploadcloudinary");
 // imageService.js
 class ImageService {
   async addProfileImage(type, file, userEntity) {
@@ -76,6 +76,74 @@ class ImageService {
         const error = new Error("Failed to delete old image");
         error.statusCode = 500;
         throw error;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getSliderImages(folderName) {
+    try {
+      const sliderImages = await getAllSlider(folderName);
+      if (sliderImages.length === 0 || !sliderImages) {
+        return [];
+      }
+
+      const slideImagePaths = sliderImages.map((image) => {
+        return image.secure_url;
+      });
+
+      return slideImagePaths;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteSliderImage(publicId) {
+    try {
+      const deleteResult = await deleteImage(publicId);
+      if (deleteResult.result === "ok") {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async uploadSliderImage(file, vendorId) {
+    try {
+      const vendor = await Vendor.findByIdAndUpdate(vendorId, {
+        $push: {
+          images: file.path,
+        },
+      });
+
+      if (!vendor) {
+        const error = new Error("Vendor not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      return file;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteShopImage(publicId, vendorId) {
+    try {
+      await Vendor.findByIdAndUpdate(vendorId, {
+        $pull: {
+          images: { $regex: publicId },
+        },
+      });
+      const deleteResult = await deleteImage(publicId);
+      if (deleteResult.result === "ok") {
+        return true;
+      } else {
+        return false;
       }
     } catch (error) {
       throw error;
