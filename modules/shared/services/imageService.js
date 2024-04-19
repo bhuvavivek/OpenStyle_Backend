@@ -52,13 +52,13 @@ class ImageService {
 
       console.log(publicId);
 
-      const deleteProfileImage = await cloudinaryConfig.uploader.destroy(
-        publicId,
-        {
-          invalidate: true,
-          resource_type: "image",
-        }
-      );
+      // const deleteProfileImage = await cloudinaryConfig.uploader.destroy(
+      //   publicId,
+      //   {
+      //     invalidate: true,
+      //     resource_type: "image",
+      //   }
+      // );
 
       // console.log(deleteProfileImage);
 

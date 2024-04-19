@@ -1,7 +1,19 @@
 const multer = require("multer");
 const path = require("path");
 
-const { cloudinary } = require("../config/cloudinary-cofig");
+const cloudinary = require("cloudinary").v2;
+
+require("dotenv").config();
+
+const cloudinaryConfig = {
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+};
+
+// Cloudinary Configuration
+cloudinary.config(cloudinaryConfig);
+
 function uploadMiddleware(userType) {
   let folderName;
   if (userType === "USER") {
