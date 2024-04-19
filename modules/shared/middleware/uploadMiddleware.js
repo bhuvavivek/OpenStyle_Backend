@@ -55,8 +55,4 @@ function uploadMiddleware(userType) {
   });
 }
 
-function deleteMiddleware(userType) {
-  let folderName;
-}
-
 module.exports = uploadMiddleware;
