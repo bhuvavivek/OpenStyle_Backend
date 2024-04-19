@@ -2,6 +2,7 @@ const User = require("../../user/models/user");
 const Vendor = require("../../vendor/models/vendor");
 
 const extractPublicId = require("../utils/extractPublicId");
+const { deleteImage } = require("../middleware/uploadMiddleware");
 // imageService.js
 class ImageService {
   async addProfileImage(type, file, userEntity) {
@@ -34,35 +35,48 @@ class ImageService {
             [entityProfile]: file.path,
           }
         );
-        return EntityProfile;
+        return EntityProfile[entityProfile];
       }
 
       // delete old image
       let folderName;
+
       if (type === "USER") {
         folderName = "UserProfile";
       }
+
       if (type === "VENDOR") {
         folderName = "VendorProfile";
       }
+
       const publicId = extractPublicId(
         folderName,
         userEntity[entity][entityProfile]
       );
 
-      console.log(publicId);
+      if (!publicId) {
+        const error = new Error("Failed to extract public id");
+        error.statusCode = 500;
+        throw error;
+      }
 
-      // const deleteProfileImage = await cloudinaryConfig.uploader.destroy(
-      //   publicId,
-      //   {
-      //     invalidate: true,
-      //     resource_type: "image",
-      //   }
-      // );
+      const deleteResult = await deleteImage(publicId);
 
-      // console.log(deleteProfileImage);
+      if (deleteResult.result === "ok" || deleteResult.result === "not found") {
+        let EntityProfile = await entityModel.findByIdAndUpdate(
+          userEntity[entity]._id,
+          {
+            [entityProfile]: file.path,
+          }
+        );
+        return EntityProfile[entityProfile];
+      }
 
-      return file;
+      if (!deleteResult) {
+        const error = new Error("Failed to delete old image");
+        error.statusCode = 500;
+        throw error;
+      }
     } catch (error) {
       throw error;
     }

@@ -1,4 +1,5 @@
 const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const path = require("path");
 
 const cloudinary = require("cloudinary").v2;
@@ -55,4 +56,16 @@ function uploadMiddleware(userType) {
   });
 }
 
-module.exports = uploadMiddleware;
+async function deleteImage(publicId) {
+  try {
+    const deleteResult = await cloudinary.uploader.destroy(publicId, {
+      invalidate: true,
+      resource_type: "image",
+    });
+    return deleteResult;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { uploadMiddleware, deleteImage };
