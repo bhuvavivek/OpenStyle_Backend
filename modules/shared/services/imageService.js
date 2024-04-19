@@ -1,7 +1,6 @@
 const User = require("../../user/models/user");
 const Vendor = require("../../vendor/models/vendor");
 
-const cloudinaryConfig = require("../../../config/cloudineryConfig");
 const extractPublicId = require("../utils/extractPublicId");
 // imageService.js
 class ImageService {
@@ -53,15 +52,15 @@ class ImageService {
 
       console.log(publicId);
 
-      const deleteProfileImage = await cloudinaryConfig.uploader.destroy(
-        publicId,
-        {
-          invalidate: true,
-          resource_type: "image",
-        }
-      );
+      // const deleteProfileImage = await cloudinaryConfig.uploader.destroy(
+      //   publicId,
+      //   {
+      //     invalidate: true,
+      //     resource_type: "image",
+      //   }
+      // );
 
-      console.log(deleteProfileImage);
+      // console.log(deleteProfileImage);
 
       return file;
     } catch (error) {

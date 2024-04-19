@@ -1,8 +1,18 @@
 const multer = require("multer");
-
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const cloudinaryConfig = require("../../../config/cloudineryConfig");
 const path = require("path");
+
+const cloudinary = require("cloudinary").v2;
+
+require("dotenv").config();
+
+const cloudinaryConfig = {
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+};
+
+// Cloudinary Configuration
+cloudinary.config(cloudinaryConfig);
 
 function uploadMiddleware(userType) {
   let folderName;
@@ -16,7 +26,7 @@ function uploadMiddleware(userType) {
   const allowedFormats = ["jpg", "jpeg", "png", "gif"]; // Allowed image formats
 
   const storage = new CloudinaryStorage({
-    cloudinary: cloudinaryConfig,
+    cloudinary: cloudinary,
     params: (req, file) => {
       const folderPath = `${folderName.trim()}`;
       const fileExtension = path.extname(file.originalname).substring(1);
