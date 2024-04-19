@@ -2,7 +2,7 @@ const User = require("../../user/models/user");
 const Vendor = require("../../vendor/models/vendor");
 
 const extractPublicId = require("../utils/extractPublicId");
-const { deleteImage } = require("../middleware/uploadMiddleware");
+const { deleteImage } = require("../middleware/uploadcloudinary");
 // imageService.js
 class ImageService {
   async addProfileImage(type, file, userEntity) {

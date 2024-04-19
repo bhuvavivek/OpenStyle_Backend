@@ -6,6 +6,6 @@ const { uploadImageProfile } = require("../controllers/imageControllers");
 const router = Router();
 router.use(authenticate);
 
-router.put("/", uploadImageProfile);
+router.put("/profile", uploadImageProfile);
 
 module.exports = router;
