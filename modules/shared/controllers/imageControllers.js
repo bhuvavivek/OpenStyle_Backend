@@ -128,8 +128,18 @@ class ImageController {
             req.file,
             req.user.id
           );
-
-          return res.status(200).json({ status: true, message: result });
+          if (!result || result.length === 0) {
+            return res.status(400).json({
+              status: false,
+              message: "File NOT RECEIVED",
+              images: [],
+            });
+          }
+          return res.status(200).json({
+            status: true,
+            message: "File UPLOAD SUCCESSFULLY",
+            Images: result,
+          });
         }
       );
     } catch (error) {
@@ -150,14 +160,20 @@ class ImageController {
 
       let publicId = `ShopImages/${req.query.publicId}`;
       const result = await ImageService.deleteShopImage(publicId, req.user.id);
-      if (result) {
-        return res
-          .status(200)
-          .json({ status: true, message: " Image Delete Successfully" });
+      if (result || result.length > 0) {
+        return res.status(200).json({
+          status: true,
+          message: " Image Delete Successfully",
+          images: result,
+        });
       }
       return res
         .status(400)
-        .json({ status: false, message: "Image Not Found" });
+        .json({
+          status: false,
+          message: "Image Not Found For Delete",
+          images: [],
+        });
     } catch (error) {
       next(error);
     }

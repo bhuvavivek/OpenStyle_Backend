@@ -82,6 +82,8 @@ class ServiceController {
       next(error);
     }
   };
+
+  deleteService = async (req, res, next) => {};
 }
 
 module.exports = new ServiceController();

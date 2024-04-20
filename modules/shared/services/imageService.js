@@ -114,19 +114,19 @@ class ImageService {
 
   async uploadSliderImage(file, vendorId) {
     try {
-      const vendor = await Vendor.findByIdAndUpdate(vendorId, {
-        $push: {
-          images: file.path,
+      const vendor = await Vendor.findByIdAndUpdate(
+        vendorId,
+        {
+          $push: {
+            images: file.path,
+          },
         },
-      });
+        {
+          new: true,
+        }
+      );
 
-      if (!vendor) {
-        const error = new Error("Vendor not found");
-        error.statusCode = 404;
-        throw error;
-      }
-
-      return file;
+      return vendor.images;
     } catch (error) {
       throw error;
     }
@@ -134,14 +134,20 @@ class ImageService {
 
   async deleteShopImage(publicId, vendorId) {
     try {
-      await Vendor.findByIdAndUpdate(vendorId, {
-        $pull: {
-          images: { $regex: publicId },
+      const vendor = await Vendor.findByIdAndUpdate(
+        vendorId,
+        {
+          $pull: {
+            images: { $regex: publicId },
+          },
         },
-      });
+        {
+          new: true,
+        }
+      );
       const deleteResult = await deleteImage(publicId);
       if (deleteResult.result === "ok") {
-        return true;
+        return vendor.images;
       } else {
         return false;
       }

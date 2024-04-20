@@ -26,4 +26,5 @@ router.get(
   authenticate,
   SubCategoryController.getSubcategory
 );
+
 module.exports = router;

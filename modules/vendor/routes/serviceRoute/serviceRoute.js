@@ -29,5 +29,6 @@ router.post(
   vendorServiceValidator,
   ServiceController.createVendorService
 );
+router.delete("/:serviceId", ServiceController.deleteService);
 
 module.exports = router;
