@@ -17,9 +17,9 @@ class ImageService {
         error.statusCode = 400;
         throw error;
       }
-      if (type === "VENOR") {
+      if (type === "VENDOR") {
         entityModel = Vendor;
-        entityProfile = "vendorProfile";
+        entityProfile = "vendorProfileImage";
         entity = "vendor";
       }
       if (type === "USER") {
@@ -33,8 +33,12 @@ class ImageService {
           userEntity[entity]._id,
           {
             [entityProfile]: file.path,
+          },
+          {
+            new: true,
           }
         );
+
         return EntityProfile[entityProfile];
       }
 
