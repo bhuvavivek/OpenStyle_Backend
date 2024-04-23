@@ -51,6 +51,10 @@ class CategoryService {
             })
             .select("categoryId -_id")
         ).map((doc) => doc.categoryId);
+
+        categories = categories.filter(
+          (category, index, self) => self.indexOf(category) === index
+        );
       }
 
       if (!categories) {
