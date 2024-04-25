@@ -21,6 +21,13 @@ class CategoryController {
 
   getCategories = async (req, res, next) => {
     try {
+      let vendorId;
+
+      if (req.query.vendorId && req.type === "USER") {
+        vendorId = req.query.vendorId;
+      } else {
+        vendorId = req.user.id;
+      }
       const result = await CategoryService.getCategories(
         req.query.dropdown,
         req.user.id
